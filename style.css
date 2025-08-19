@@ -54,6 +54,13 @@ body, html {width: 100%; height: 100%; overflow: hidden; font-family: sans-serif
   border-radius: 26px;
   font-size: 18px;
   cursor: pointer;
+  transition: transform 0.1s ease, background-color 0.1s ease;
+  -webkit-tap-highlight-color: transparent; /* убирает серую подсветку на iOS */
+}
+
+.action button:active {
+  transform: scale(0.95);
+  background: rgba(47,58,58,1);
 }
 .action .icon {
   width: 52px; height: 52px;
