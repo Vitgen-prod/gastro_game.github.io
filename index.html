@@ -7,7 +7,8 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
+  <!-- Стартовый экран -->
+  <div class="container" id="startScreen">
     <div class="header">
       <div class="back">←</div>
       <div class="menu">⋯</div>
@@ -19,6 +20,55 @@
       <div class="icon">+</div>
     </div>
   </div>
+
+  <!-- Личный кабинет (скрыт до клика) -->
+  <div class="app hidden" id="cabinet">
+    <!-- попап -->
+    <div class="overlay" id="introOverlay">
+      <div class="modal" role="dialog" aria-modal="true">
+        <h2>Система уровней GASTRONOMADS</h2>
+        <p>В клубе 4 уровня. Прогресс отмечается валютой — Номами.</p>
+        <div class="dash"><i></i><i></i><i></i><i></i></div>
+        <p>Участвуйте, выполняйте задания, копите Номы. За уровни — подарки.</p>
+        <button class="ok" id="btnOk">ПОНЯТНО</button>
+      </div>
+    </div>
+
+    <!-- верхняя панель -->
+    <header class="topbar">
+      <div class="chip">← Назад</div>
+      <div class="chip pink">Вы • <span data-field="Level">1</span> уровень</div>
+      <div class="chip green"><span data-field="Score">9999</span> Nom</div>
+    </header>
+
+    <!-- карта -->
+    <main class="map" id="mapScreen" aria-hidden="true">
+      <div class="panel">
+        <div class="panel-title">До нового уровня</div>
+        <div class="progress"><i></i></div>
+      </div>
+
+      <div class="map-canvas" id="mapCanvas">
+        <button class="lvl" data-level="1"><span>1</span><span class="sub">уровень</span></button>
+        <button class="lvl" data-level="2"><span>2</span><span class="sub">уровень</span></button>
+        <button class="lvl" data-level="3"><span>3</span><span class="sub">уровень</span></button>
+        <button class="lvl" data-level="4"><span>4</span><span class="sub">уровень</span></button>
+      </div>
+
+      <div class="cta">
+        <button class="btn" id="openLevel">ОТКРЫТЬ НОВЫЙ УРОВЕНЬ</button>
+      </div>
+    </main>
+
+    <!-- нижнее меню -->
+    <nav class="bottom">
+      <div class="tab" data-tab="casino">Казино</div>
+      <div class="tab" data-tab="tasks">Задания</div>
+      <div class="tab" data-tab="shop">Магазин</div>
+      <div class="tab" data-tab="friends">Друзья</div>
+    </nav>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
