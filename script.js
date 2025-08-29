@@ -33,10 +33,13 @@ document.getElementById('openLevel').addEventListener('click', () => {
 });
 
 // нижнее меню (заглушки)
-document.querySelectorAll('nav.bottom .tab').forEach(tab => {
+document.querySelectorAll('#bottomNav .tab').forEach(tab => {
   tab.addEventListener('click', () => {
     const id = tab.dataset.tab;
     // TODO: роутинг/переход
     console.log('TAB', id);
+  });
+});
+
   });
 });
