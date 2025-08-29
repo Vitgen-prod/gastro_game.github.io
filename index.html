@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>Gastro Nomads</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <!-- Стартовый экран -->
@@ -14,16 +14,16 @@
       <div class="menu">⋯</div>
     </div>
     <div class="title">Ваш путь к гастрономическому мастерству</div>
-    <img src="logo.png" alt="Gastro Nomads" class="logo">
+    <img src="logo.png" alt="Gastro Nomads" class="logo" />
     <div class="action">
       <button id="startBtn">НАЧАТЬ ИГРУ</button>
       <div class="icon">+</div>
     </div>
   </div>
 
-  <!-- Личный кабинет (скрыт до клика) -->
+  <!-- Личный кабинет -->
   <div class="app hidden" id="cabinet">
-    <!-- попап -->
+    <!-- Попап -->
     <div class="overlay" id="introOverlay">
       <div class="modal" role="dialog" aria-modal="true">
         <h2>Система уровней GASTRONOMADS</h2>
@@ -34,14 +34,14 @@
       </div>
     </div>
 
-    <!-- верхняя панель -->
+    <!-- Верхняя панель -->
     <header class="topbar">
       <div class="chip">← Назад</div>
       <div class="chip pink">Вы • <span data-field="Level">1</span> уровень</div>
       <div class="chip green"><span data-field="Score">9999</span> Nom</div>
     </header>
 
-    <!-- карта -->
+    <!-- Карта -->
     <main class="map" id="mapScreen" aria-hidden="true">
       <div class="panel">
         <div class="panel-title">До нового уровня</div>
@@ -60,29 +60,28 @@
       </div>
     </main>
 
-    <!-- нижнее меню -->
+    <!-- Нижнее меню (иконки в корне проекта) -->
     <nav class="bottom-card" id="bottomNav">
-  <button class="tab" data-tab="casino">
-    <img src="icons/casino.png" alt="" class="icon">
-    <span>Казино</span>
-  </button>
-  <i class="divider" aria-hidden="true"></i>
-  <button class="tab" data-tab="tasks">
-    <img src="icons/tasks.png" alt="" class="icon">
-    <span>Задания</span>
-  </button>
-  <i class="divider" aria-hidden="true"></i>
-  <button class="tab" data-tab="shop">
-    <img src="icons/shop.png" alt="" class="icon">
-    <span>Магазин</span>
-  </button>
-  <i class="divider" aria-hidden="true"></i>
-  <button class="tab" data-tab="friends">
-    <img src="icons/friends.png" alt="" class="icon">
-    <span>Друзья</span>
-  </button>
-</nav>
-
+      <button class="tab" data-tab="casino">
+        <img src="casino.png" alt="" class="icon" />
+        <span>Казино</span>
+      </button>
+      <i class="divider"></i>
+      <button class="tab" data-tab="tasks">
+        <img src="tasks.png" alt="" class="icon" />
+        <span>Задания</span>
+      </button>
+      <i class="divider"></i>
+      <button class="tab" data-tab="shop">
+        <img src="shop.png" alt="" class="icon" />
+        <span>Магазин</span>
+      </button>
+      <i class="divider"></i>
+      <button class="tab" data-tab="friends">
+        <img src="friends.png" alt="" class="icon" />
+        <span>Друзья</span>
+      </button>
+    </nav>
   </div>
 
   <script src="script.js"></script>
