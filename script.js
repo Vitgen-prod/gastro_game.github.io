@@ -1,14 +1,14 @@
 // старт -> показать ЛК с попапом
-const startBtn = document.getElementById('startBtn');
+const startBtn    = document.getElementById('startBtn');
 const startScreen = document.getElementById('startScreen');
-const cabinet = document.getElementById('cabinet');
-const overlay = document.getElementById('introOverlay');
-const mapScreen = document.getElementById('mapScreen');
+const cabinet     = document.getElementById('cabinet');
+const overlay     = document.getElementById('introOverlay');
+const mapScreen   = document.getElementById('mapScreen');
 
 startBtn.addEventListener('click', () => {
   startScreen.classList.add('hidden');
-  cabinet.classList.remove('hidden');       // ЛК
-  overlay.classList.remove('hidden');       // попап открыт
+  cabinet.classList.remove('hidden');
+  overlay.classList.remove('hidden');
   mapScreen.setAttribute('aria-hidden','false');
 });
 
@@ -21,7 +21,7 @@ document.getElementById('btnOk').addEventListener('click', () => {
 document.querySelectorAll('.lvl').forEach(btn => {
   btn.addEventListener('click', () => {
     const lvl = btn.dataset.level;
-    // TODO: ваше действие
+    // TODO: действие для выбранного уровня
     console.log('LEVEL', lvl);
   });
 });
@@ -36,10 +36,7 @@ document.getElementById('openLevel').addEventListener('click', () => {
 document.querySelectorAll('#bottomNav .tab').forEach(tab => {
   tab.addEventListener('click', () => {
     const id = tab.dataset.tab;
-    // TODO: роутинг/переход
+    // TODO: роутинг/переход по разделам
     console.log('TAB', id);
-  });
-});
-
   });
 });
