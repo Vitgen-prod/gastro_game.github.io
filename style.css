@@ -52,7 +52,7 @@ body, html { overflow:hidden; }
 .lvl[data-level="2"]{ right:26px; top:150px; }
 .lvl[data-level="3"]{ left:34px; bottom:160px; }
 .lvl[data-level="4"]{ right:22px; bottom:60px; }
-.lvl .sub{ position:absolute; bottom:-18px; background:#fff; border-radius:999px; padding:2px 8px; font-size:11px; box-shadow:0 3px 10px rgba(0,0,0,.08); }
+.lvl .sub{ position:absolute; bottom:-18px; background:#fff; border-radius:999px; padding:2px 8px; font-size:11px; }
 
 .cta{ position:sticky; bottom:10px; margin-top:10px; }
 .btn{ width:100%; height:56px; border:0; border-radius:14px; background:#3a3f3f; color:#fff; font-size:16px; font-weight:700; letter-spacing:.2px; box-shadow:0 8px 20px rgba(0,0,0,.18); cursor:pointer; }
