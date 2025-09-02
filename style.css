@@ -140,11 +140,6 @@ body, html { overflow:hidden; }
 }
 
 
-.popup-content img {
-  max-width: 90%;
-  height: auto;
-}
-
 .popup-btn {
   position: absolute;
   bottom: 20px;             /* отступ от нижнего края попапа */
