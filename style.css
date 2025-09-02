@@ -113,16 +113,32 @@ body, html { overflow:hidden; }
 
 .popup-content {
   position: absolute;
-  top: 60px; /* подгони под свой фон */
+  top: 60px; /* сдвиг от верхнего края фона */
   left: 0;
   right: 0;
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
   align-items: center;
+  gap: 6px; /* базовый маленький промежуток */
   z-index: 2;
 }
+
+.popup-content img {
+  max-width: 90%;
+  height: auto;
+}
+
+/* Вторая картинка чуть ниже */
+.popup-content img:nth-child(2) {
+  margin-top: 14px; /* регулируй по макету */
+}
+
+/* Третья картинка ещё ниже */
+.popup-content img:nth-child(3) {
+  margin-top: 14px; /* тоже регулируй, можно больше/меньше */
+}
+
 
 .popup-content img {
   max-width: 90%;
