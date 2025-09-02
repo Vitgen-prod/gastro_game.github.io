@@ -113,7 +113,7 @@ body, html { overflow:hidden; }
 
 .popup-content {
   position: absolute;
-  top: 60px; /* сдвиг от верхнего края фона */
+  top: 45px; /* сдвиг от верхнего края фона */
   left: 0;
   right: 0;
   padding: 20px;
@@ -131,7 +131,7 @@ body, html { overflow:hidden; }
 
 /* Вторая картинка чуть ниже */
 .popup-content img:nth-child(2) {
-  margin-top: 20px; /* регулируй по макету */
+  margin-top: 40px; /* регулируй по макету */
 }
 
 /* Третья картинка ещё ниже */
@@ -150,7 +150,7 @@ body, html { overflow:hidden; }
   border-radius: 24px;
   padding: 12px 32px;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #FFBBCE;
   cursor: pointer;
   z-index: 3;
   box-shadow: 0 8px 20px rgba(0,0,0,.2);
