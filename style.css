@@ -1,3 +1,4 @@
+
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial; }
 :root{
@@ -10,22 +11,13 @@ html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,
 
 /* Стартовый экран */
 body, html { overflow:hidden; }
-.container {
-  position:fixed; inset:0;
-  background:url('фон1.jpg') center/cover no-repeat;
-}
-.header { position:absolute; top:0; left:0; width:100%; padding:16px;
-  display:flex; align-items:center; justify-content:space-between; backdrop-filter:blur(10px); }
-.header .back, .header .menu {
-  width:36px; height:36px; border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:16px; color:#333;
-}
+.container { position:fixed; inset:0; background:url('фон1.jpg') center/cover no-repeat; }
+.header { position:absolute; top:0; left:0; width:100%; padding:16px; display:flex; align-items:center; justify-content:space-between; backdrop-filter:blur(10px); }
+.header .back, .header .menu { width:36px; height:36px; border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:16px; color:#333; }
 .title { position:absolute; top:80px; left:50%; transform:translateX(-50%); width:90%; text-align:center; font-size:24px; font-weight:700; color:#2f3a3a; }
 .logo { position:absolute; top:160px; left:50%; transform:translateX(-50%); width:60%; height:auto; }
 .action { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); width:90%; display:flex; align-items:center; justify-content:center; }
-.action button {
-  flex:1; height:52px; background:rgba(47,58,58,.9); color:#fff; border:0; border-radius:26px; font-size:18px; cursor:pointer;
-  transition:transform .1s ease, background-color .1s ease; -webkit-tap-highlight-color:transparent;
-}
+.action button { flex:1; height:52px; background:rgba(47,58,58,.9); color:#fff; border:0; border-radius:26px; font-size:18px; cursor:pointer; transition:transform .1s ease, background-color .1s ease; -webkit-tap-highlight-color:transparent; }
 .action button:active { transform:scale(.95); background:rgba(47,58,58,1); }
 .action .icon { width:52px; height:52px; margin-left:8px; background:#fff; border-radius:26px; display:flex; align-items:center; justify-content:center; font-size:24px; color:#2f3a3a; }
 
@@ -52,12 +44,12 @@ body, html { overflow:hidden; }
 .lvl[data-level="2"]{ right:26px; top:150px; }
 .lvl[data-level="3"]{ left:34px; bottom:160px; }
 .lvl[data-level="4"]{ right:22px; bottom:60px; }
-.lvl .sub{ position:absolute; bottom:-18px; background:#fff; border-radius:999px; padding:2px 8px; font-size:11px; box-shadow:0 3px 10px rgba(0,0,0,.08);  }
+.lvl .sub{ position:absolute; bottom:-18px; background:#fff; border-radius:999px; padding:2px 8px; font-size:11px; box-shadow:0 3px 10px rgba(0,0,0,.08); }
 
 .cta{ position:sticky; bottom:10px; margin-top:10px; }
 .btn{ width:100%; height:56px; border:0; border-radius:14px; background:#3a3f3f; color:#fff; font-size:16px; font-weight:700; letter-spacing:.2px; box-shadow:0 8px 20px rgba(0,0,0,.18); cursor:pointer; }
 
-/* Нижнее меню (карточка) */
+/* Меню */
 .bottom-card{
   position:fixed; left:50%; transform:translateX(-50%);
   bottom:max(8px, env(safe-area-inset-bottom));
@@ -66,107 +58,42 @@ body, html { overflow:hidden; }
   background:var(--menu-bg);
   border-radius:var(--menu-radius);
   box-shadow:var(--menu-shadow);
-  padding:12px 10px;
-  backdrop-filter:blur(4px);
+  padding:12px 10px; backdrop-filter:blur(4px);
 }
-.bottom-card .tab{
-  appearance:none; -webkit-appearance:none;
-  border:0; background:transparent; cursor:pointer;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:6px; padding:6px 8px; flex:1; min-width:0; text-align:center;
-}
+.bottom-card .tab{ appearance:none; -webkit-appearance:none; border:0; background:transparent; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:6px 8px; flex:1; min-width:0; text-align:center; }
 .bottom-card .tab .icon{ width:32px; height:32px; object-fit:contain; display:block; }
 .bottom-card .tab span{ font-size:13px; line-height:1.2; text-align:center; font-weight:600; color:var(--menu-text); }
 .bottom-card .divider{ width:1px; height:30px; background:var(--menu-divider); display:block; opacity:.9; }
 .bottom-card .tab:active{ transform:scale(.96); }
 
-/* Попап */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+/* Попап (исправлено) */
+.overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.45);
+  display:flex; align-items:center; justify-content:center;
+  z-index:1000; overflow:auto;
 }
-
-.popup {
-  position: relative;
-  width: 90%;
-  max-width: 360px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.popup{
+  position:relative; width:90%; max-width:360px;
+  margin:24px 0; /* место на экранах с маленькой высотой */
 }
+.popup-title{ margin-bottom:-20px; z-index:2; }
+.popup-bg{ width:100%; display:block; z-index:1; }
 
-.popup-title {
-  margin-bottom: -20px; /* чтобы налезало на фон */
-  z-index: 2;
+.popup-content{
+  position:absolute; top:45px; left:0; right:0;
+  padding:20px 20px 88px;   /* снизу запас под кнопку */
+  display:flex; flex-direction:column; align-items:center; gap:6px; z-index:2;
 }
+.popup-content img{ max-width:90%; height:auto; }
+.popup-content img:nth-child(2){ margin-top:40px; }
+.popup-content img:nth-child(3){ margin-top:20px; }
 
-.popup-bg {
-  width: 100%;
-  display: block;
-  z-index: 1;
-}
-
-.popup-content {
-  position: absolute;
-  top: 45px; /* сдвиг от верхнего края фона */
-  left: 0;
-  right: 0;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px; /* базовый маленький промежуток */
-  z-index: 2;
-}
-
-.popup-content img {
-  max-width: 90%;
-  height: auto;
-}
-
-/* Вторая картинка чуть ниже */
-.popup-content img:nth-child(2) {
-  margin-top: 40px; /* регулируй по макету */
-}
-
-/* Третья картинка ещё ниже */
-.popup-content img:nth-child(3) {
-  margin-top: 20px; /* тоже регулируй, можно больше/меньше */
-}
-
-
-/* кнопка как в фигме */
+/* Кнопка как в фигме */
 .popup-btn{
-  position:absolute;
-  left:50%;
-  bottom:20px;                /* подстройте при необходимости */
-  transform:translateX(-50%);
-
-  background:#FFBBCE;         /* Colors → #FFBBCE */
-  border:0;
-  border-radius:38px;         /* Radius */
-  padding:8px 30px;           /* Padding: top/bottom 8, left/right 30 */
-
-  font-family:'Manrope',sans-serif; /* Typography */
-  font-size:16px;
-  font-weight:700;
-  line-height:1;              /* 100% */
-  letter-spacing:0;
-  text-transform:uppercase;
-  text-align:center;
-  color:#fff;
-
-  /* тень по желанию — уберите, если не нужна */
-  box-shadow:0 8px 20px rgba(0,0,0,.15);
+  position:absolute; left:50%; bottom:20px; transform:translateX(-50%);
+  background:#FFBBCE; border:0; border-radius:38px; padding:8px 30px;
+  font-family:'Manrope',sans-serif; font-size:16px; font-weight:700; line-height:1; text-transform:uppercase; text-align:center; color:#fff;
+  z-index:5; /* поверх контента */
+  box-shadow:0 8px 20px rgba(0,0,0,.15); /* можно убрать */
 }
-
-/* чтобы контент не уезжал под кнопку */
-.popup-content{ padding-bottom:88px; }
-
-/* состояние нажатия (опционально) */
 .popup-btn:active{ transform:translateX(-50%) scale(0.98); }
