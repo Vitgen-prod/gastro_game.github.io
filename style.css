@@ -140,18 +140,33 @@ body, html { overflow:hidden; }
 }
 
 
-.popup-btn {
-  position: absolute;
-  bottom: 20px;             /* отступ от нижнего края попапа */
-  left: 50%;
-  transform: translateX(-50%);
-  background: ##FFBBCE;
-  border: none;
-  border-radius: 24px;
-  padding: 12px 32px;
-  font-weight: 800;
-  color: #FFBBCE;
-  cursor: pointer;
-  z-index: 3;
-  box-shadow: 0 8px 20px rgba(0,0,0,.2);
+/* кнопка как в фигме */
+.popup-btn{
+  position:absolute;
+  left:50%;
+  bottom:20px;                /* подстройте при необходимости */
+  transform:translateX(-50%);
+
+  background:#FFBBCE;         /* Colors → #FFBBCE */
+  border:0;
+  border-radius:38px;         /* Radius */
+  padding:8px 30px;           /* Padding: top/bottom 8, left/right 30 */
+
+  font-family:'Manrope',sans-serif; /* Typography */
+  font-size:16px;
+  font-weight:700;
+  line-height:1;              /* 100% */
+  letter-spacing:0;
+  text-transform:uppercase;
+  text-align:center;
+  color:#fff;
+
+  /* тень по желанию — уберите, если не нужна */
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
 }
+
+/* чтобы контент не уезжал под кнопку */
+.popup-content{ padding-bottom:88px; }
+
+/* состояние нажатия (опционально) */
+.popup-btn:active{ transform:translateX(-50%) scale(0.98); }
