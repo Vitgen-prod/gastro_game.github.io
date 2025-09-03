@@ -79,7 +79,7 @@ body, html { overflow:hidden; }
 .popup-title{
   position:absolute;
   top:-18px;                 /* подгони по макету */
-  left:16px;
+  left:20px;
   right:16px;
   z-index:5;
   margin:0;                  /* убери отрицательные маргины */
