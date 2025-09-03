@@ -76,7 +76,14 @@ body, html { overflow:hidden; }
   position:relative; width:90%; max-width:360px;
   margin:24px 0; /* место на экранах с маленькой высотой */
 }
-.popup-title{ margin-bottom:-20px; z-index:2; }
+.popup-title{
+  position:absolute;
+  top:-18px;                 /* подгони по макету */
+  left:16px;
+  right:16px;
+  z-index:5;
+  margin:0;                  /* убери отрицательные маргины */
+}
 .popup-bg{ width:100%; display:block; z-index:1; }
 
 .popup-content{
