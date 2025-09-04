@@ -86,8 +86,6 @@ body, html { overflow:hidden; }
 .popup-title{
   position:absolute;
   top:-18px;                 /* подгони по макету */
-  left:25px;
-  right:16px;
   z-index:5;
   margin:0;                  /* убери отрицательные маргины */
 }
