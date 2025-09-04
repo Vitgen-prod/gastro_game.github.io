@@ -85,9 +85,15 @@ body, html { overflow:hidden; }
 }
 .popup-title{
   position:absolute;
-  top:-18px;                 /* подгони по макету */
+  top:-22px;
+  left:50%;
+  transform:translateX(-50%);
+  width:calc(100% - 32px);   /* внутри карточки */
+  max-width:340px;           /* под макет */
+  height:auto;
+  display:block;
   z-index:5;
-  margin:0;                  /* убери отрицательные маргины */
+  margin:0;
 }
 .popup-bg{ width:100%; display:block; z-index:1; }
 
