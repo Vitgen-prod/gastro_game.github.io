@@ -99,10 +99,13 @@ body, html { overflow:hidden; }
 
 .popup-content{
   position:absolute; top:45px; left:0; right:0;
-  padding:15px 20px 88px;   /* снизу запас под кнопку */
+  padding:20px 20px 88px;   /* снизу запас под кнопку */
   display:flex; flex-direction:column; align-items:center; gap:6px; z-index:2;
 }
 .popup-content img{ max-width:90%; height:auto; }
+.popup-content img:nth-child(1) {
+  margin-top: -10px; /* можно регулировать значением */
+}
 .popup-content img:nth-child(2){ margin-top:40px; }
 .popup-content img:nth-child(3){ margin-top:20px; }
 
