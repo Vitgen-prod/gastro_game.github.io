@@ -104,10 +104,10 @@ body, html { overflow:hidden; }
 }
 .popup-content img{ max-width:90%; height:auto; }
 .popup-content img:nth-child(1) {
-  margin-top: -10px; /* можно регулировать значением */
+  margin-top: -20px; /* можно регулировать значением */
 }
-.popup-content img:nth-child(2){ margin-top:40px; }
-.popup-content img:nth-child(3){ margin-top:20px; }
+.popup-content img:nth-child(2){ margin-top:35px; }
+.popup-content img:nth-child(3){ margin-top:10px; }
 
 /* Кнопка как в фигме */
 .popup-btn{
