@@ -16,11 +16,18 @@ body, html { overflow:hidden; }
 .header .back, .header .menu { width:36px; height:36px; border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:16px; color:#333; }
 .title { position:absolute; top:80px; left:50%; transform:translateX(-50%); width:90%; text-align:center; font-size:24px; font-weight:700; color:#2f3a3a; }
 .logo { position:absolute; top:160px; left:50%; transform:translateX(-50%); width:60%; height:auto; }
-.action { position:absolute; bottom:32px; left:50%; transform:translateX(-50%); width:90%; display:flex; align-items:center; justify-content:center; }
-.action button { flex:1; height:52px; background:rgba(47,58,58,.9); color:#fff; border:0; border-radius:26px; font-size:18px; cursor:pointer; transition:transform .1s ease, background-color .1s ease; -webkit-tap-highlight-color:transparent; }
-.action button:active { transform:scale(.95); background:rgba(47,58,58,1); }
-.action .icon { width:52px; height:52px; margin-left:8px; background:#fff; border-radius:26px; display:flex; align-items:center; justify-content:center; font-size:24px; color:#2f3a3a; }
-
+.action {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.start-image-btn {
+  display: block;
+  width: 342px;   /* как в фигме */
+  height: 60px;   /* как в фигме */
+  cursor: pointer;
+}
 /* Личный кабинет */
 .hidden { display:none !important; }
 .app { position:fixed; inset:0; display:flex; flex-direction:column; background:url('фон2.png') center/cover no-repeat; }
