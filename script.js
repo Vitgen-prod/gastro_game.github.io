@@ -4,6 +4,7 @@ const startScreen = document.getElementById('startScreen');
 const cabinet     = document.getElementById('cabinet');
 const overlay     = document.getElementById('introOverlay');
 const mapScreen   = document.getElementById('mapScreen');
+const shopScreen  = document.getElementById('shopScreen'); // НОВОЕ
 
 /* ===== Конфиг API ===== */
 const API = 'https://script.google.com/macros/s/AKfycbzk_bfXNQ3aRDQQ6v6qVRSfdf3iUha3qnpwxGzLnTwJVwMsmlfuUv5kgGJwV-yK7nzmmA/exec';
@@ -27,6 +28,8 @@ function renderStatus(){
 
   const segs = document.querySelectorAll('#progressRail .seg');
   segs.forEach((s,i)=> s.classList.toggle('on', i < state.purchases));
+
+  renderShop(); // НОВОЕ: обновляем прогресс карточек магазина
 }
 
 function saveLocal(){
@@ -60,12 +63,11 @@ async function loadFromAPI(id){
 
     if (j && j.ok) {
       const d = j.data || {};
-      state.id = id;
-      // подхватываем возможные варианты регистров из таблицы
+      state.id        = id;
       state.level     = Number(d.level ?? d.Level) || 1;
       state.score     = Number(d.score ?? d.Score) || 0;
       state.purchases = Math.max(0, Math.min(5, Number(d.progress ?? d.Progress ?? 0)));
-      saveLocal();     // кэшируем актуальные
+      saveLocal();
       return true;
     } else {
       console.warn('API error:', j && j.error);
@@ -96,6 +98,48 @@ window.addPurchase = () => {
 window.setScore = v => { state.score = Number(v)||0; renderStatus(); saveLocal(); };
 window.setLevel = v => { state.level = Number(v)||1; renderStatus(); saveLocal(); };
 
+/* ===== Переключение экранов (карта / магазин) ===== */
+function showScreen(which){
+  if (which === 'shop'){
+    mapScreen.classList.add('hidden');
+    shopScreen.classList.remove('hidden');
+    renderShop();
+  } else {
+    shopScreen.classList.add('hidden');
+    mapScreen.classList.remove('hidden');
+  }
+}
+
+/* ===== Магазин: прогресс по карточкам и клики ===== */
+// временно: у 1-го уровня прогресс = state.purchases, у остальных 0
+function getLevelProgressSteps(lvl){
+  return (lvl === 1) ? (state.purchases || 0) : 0;
+}
+
+function renderShop(){
+  if (!shopScreen) return;
+  shopScreen.querySelectorAll('.shop-card').forEach(card => {
+    const lvl = Number(card.dataset.level);
+
+    // блокировка по уровню
+    if (state.level >= lvl) card.classList.remove('locked');
+    else card.classList.add('locked');
+
+    const steps = Math.max(0, Math.min(5, getLevelProgressSteps(lvl)));
+    const pct  = steps * 20;
+
+    const fill = card.querySelector('.shop-fill');
+    const txt  = card.querySelector('.shop-percent span');
+    if (fill) fill.style.width = pct + '%';
+    if (txt)  txt.textContent = pct;
+
+    card.onclick = () => {
+      if (card.classList.contains('locked')) return;
+      alert(`Открыта карточка уровня ${lvl} (заглушка).`);
+    };
+  });
+}
+
 /* ===== Старт / показ ЛК и попапа ===== */
 startBtn.addEventListener('click', async () => {
   startScreen.classList.add('hidden');
@@ -111,9 +155,7 @@ startBtn.addEventListener('click', async () => {
   // 2) если API недоступно — показываем из кэша (если есть)
   if (!ok) {
     const hasLocal = loadLocal(id);
-    if (!hasLocal) {
-      state.id = id; // дефолт
-    }
+    if (!hasLocal) state.id = id; // дефолт
   }
 
   renderStatus();
@@ -126,21 +168,24 @@ document.getElementById('btnOk').addEventListener('click', () => {
 
 /* Клики по уровням (заглушки) */
 document.querySelectorAll('.lvl').forEach(btn => {
-  btn.addEventListener('click', () => {
-    console.log('LEVEL', btn.dataset.level);
-  });
+  btn.addEventListener('click', () => console.log('LEVEL', btn.dataset.level));
 });
 
 /* Кнопка «ОТКРЫТЬ НОВЫЙ УРОВЕНЬ» — демо +20% прогресса */
-document.getElementById('openLevel').addEventListener('click', () => {
+document.getElementById('openLevel')?.addEventListener('click', () => {
   addPurchase();
   console.log('Progress:', state.purchases * 20 + '%');
 });
 
-/* Нижнее меню (заглушки) */
+/* Нижнее меню — переключение экранов */
 document.querySelectorAll('#bottomNav .tab').forEach(tab => {
-  tab.addEventListener('click', () => console.log('TAB', tab.dataset.tab));
+  tab.addEventListener('click', () => {
+    const id = tab.dataset.tab;
+    if (id === 'shop') showScreen('shop');
+    else showScreen('map'); // остальные возвращают на карту
+    console.log('TAB', id);
+  });
 });
 
-/* Первый рендер дефолтов (пока стартовый экран) */
+/* Первый рендер дефолтов (пока на стартовом экране) */
 renderStatus();
