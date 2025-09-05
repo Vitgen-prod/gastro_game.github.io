@@ -148,3 +148,72 @@ html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,
   border:1px solid #FFBBCE;
 }
 .status-card .progress-rail .seg.on{ background:#FFBBCE; }
+
+/* ---------- SHOP ---------- */
+#shopScreen{
+  position:relative;
+  padding: 329px 0 120px;      /* отступ сверху как в макете (Top=329) + место под меню */
+}
+
+.shop-title{
+  position: absolute;
+  top: 329px; left: 24px;
+  width: 165px; height: 45px;
+  display:flex; align-items:center; justify-content:center;
+  background:#fff;
+  border-radius: 999px;
+  box-shadow:0 2px 20px rgba(72,79,76,.20);
+  font-family:'Manrope',sans-serif; font-weight:700; font-size:20px; color:#484F4C;
+}
+.shop-title .bag{
+  width: 28px; height: 28px; margin-left: 8px;
+  background: url('shop.png') center/contain no-repeat;
+}
+
+/* сетка 2x2 по 165x145 */
+.shop-grid{
+  width: 342px; margin: 72px auto 0;   /* под заголовком */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.shop-card{
+  width: 165px; height: 145px;
+  background:#fff;
+  border-radius: 16px;
+  box-shadow:0 2px 20px rgba(72,79,76,.20);
+  padding: 12px;
+  display:flex; flex-direction:column; justify-content:flex-end; gap:10px;
+}
+.shop-card .shop-head{
+  position:absolute; top:10px; left:12px;
+  background:#F3F3F3; color:#6b6f6d;
+  padding:6px 10px; border-radius:10px;
+  font-weight:700; font-size:14px;
+}
+.shop-card .shop-lock{
+  position:absolute; top:10px; right:10px; font-size:18px; opacity:.9;
+}
+.shop-card.locked{
+  filter: grayscale(1) contrast(.9); opacity:.6; pointer-events:none;
+}
+
+.shop-progress{
+  width: 100%; height: 12px;
+  background:#E7EFE7;
+  border-radius: 999px;
+  overflow: hidden;
+  border:1px solid rgba(121,165,123,.35);
+}
+.shop-fill{
+  width: 0%;
+  height: 100%;
+  background:#79A57B;
+  transition: width .45s ease; /* плавное заполнение */
+}
+
+.shop-percent{
+  font-weight:700; font-size:14px; color:#484F4C;
+  display:flex; align-items:center; gap:6px;
+}
+.shop-percent span{ min-width: 2ch; text-align:right; }
