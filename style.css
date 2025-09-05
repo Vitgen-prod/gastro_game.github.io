@@ -114,3 +114,44 @@ html,body{width:100%;height:100%;font-family:Inter,system-ui,-apple-system,"Sego
 .shop-card.lv2{background:url('shop-card-2.png') center/cover no-repeat} */
 .shop-card.lv3{background:url('shop-card-3.png') center/cover no-repeat} */
 .shop-card.lv4{background:url('shop-card-4.png') center/cover no-repeat} */
+
+
+/* ===== FORCE SHOP LAYOUT OVERRIDES новое чтобы перебить===== */
+.status-card{
+  position:fixed !important;
+  z-index:50 !important;
+  top:calc(env(safe-area-inset-top) + 12px) !important;
+  left:50% !important; transform:translateX(-50%) !important;
+  width:342px !important;
+}
+
+#shopScreen{ padding-top:260px !important; }
+
+/* картинка "Магазин" строго по центру, 114x69 */
+.shop-title{
+  display:block !important;
+  width:114px !important; height:69px !important;
+  margin:20px auto 30px !important;
+  object-fit:contain !important;
+}
+
+/* сетка и карточки уменьшенные */
+.shop-grid{
+  width:240px !important;
+  margin:0 auto !important;
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:14px !important;
+}
+.shop-card{
+  width:110px !important; height:96px !important;
+  border-radius:12px !important; padding:8px !important;
+  box-shadow:0 2px 14px rgba(72,79,76,.20) !important;
+  position:relative !important; display:flex !important;
+  flex-direction:column !important; justify-content:flex-end !important; gap:6px !important;
+}
+.shop-meta{ display:flex !important; flex-direction:column !important; align-items:center !important; margin-bottom:6px !important; }
+.shop-percent{ font-weight:700 !important; font-size:12px !important; color:#484F4C !important; }
+.shop-label{ font-size:12px !important; color:#484F4C !important; }
+.shop-progress{ width:100% !important; height:8px !important; border-radius:999px !important; overflow:hidden !important; background:#E7EFE7 !important; border:1px solid rgba(121,165,123,.35) !important; }
+.shop-fill{ width:0% !important; height:100% !important; background:#79A57B !important; transition:width .45s ease !important; }
