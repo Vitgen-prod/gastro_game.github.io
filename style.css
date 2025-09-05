@@ -33,7 +33,7 @@ html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,
   height:60px;
   cursor:pointer;
 }
-}
+
 .start-image-btn {
   display: block;
   width: 342px;   /* как в фигме */
