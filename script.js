@@ -21,15 +21,14 @@ const state = {
 const lsKey = id => `gn_user_${id}`;
 
 function renderStatus(){
-  const lvl = document.getElementById('levelValue');
-  const scr = document.getElementById('scoreValue');
-  if (lvl) lvl.textContent = state.level;
-  if (scr) scr.textContent = state.score;
+  // уровень и баллы везде, где есть data-bind
+  document.querySelectorAll('[data-bind="level"]').forEach(n => n.textContent = state.level);
+  document.querySelectorAll('[data-bind="score"]').forEach(n => n.textContent = state.score);
 
-  const segs = document.querySelectorAll('#progressRail .seg');
-  segs.forEach((s,i)=> s.classList.toggle('on', i < state.purchases));
-
-  renderShop(); // НОВОЕ: обновляем прогресс карточек магазина
+  // сегменты прогресса во всех блоках
+  document.querySelectorAll('.progress-rail').forEach(rail => {
+    rail.querySelectorAll('.seg').forEach((s,i)=> s.classList.toggle('on', i < state.purchases));
+  });
 }
 
 function saveLocal(){
