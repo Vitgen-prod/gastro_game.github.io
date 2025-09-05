@@ -1,6 +1,6 @@
 /* ========== BASE ========== */
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial}
+html,body{width:100%;height:100%;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;overflow-x:hidden;overflow-y:auto}
 :root{
   --menu-bg:#EEEBDD;--menu-shadow:0 10px 30px rgba(0,0,0,.12);
   --menu-radius:18px;--menu-divider:#F4F0E8;--menu-text:#4b5656;
@@ -28,7 +28,15 @@ html,body{width:100%;height:100%;font-family:Inter,system-ui,-apple-system,"Sego
 .btn{width:100%;height:56px;border:0;border-radius:14px;background:#3a3f3f;color:#fff;font-size:16px;font-weight:700;letter-spacing:.2px;box-shadow:0 8px 20px rgba(0,0,0,.18);cursor:pointer}
 
 /* ========== BOTTOM NAV ========== */
-.bottom-card{position:fixed;left:50%;transform:translateX(-50%);bottom:max(8px,env(safe-area-inset-bottom));width:calc(100% - 24px);max-width:420px;display:flex;align-items:center;justify-content:space-between;background:var(--menu-bg);border-radius:var(--menu-radius);box-shadow:var(--menu-shadow);padding:12px 10px;backdrop-filter:blur(4px);z-index:60}
+.bottom-card{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:max(8px,env(safe-area-inset-bottom));
+  width:calc(100% - 24px);max-width:420px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--menu-bg);border-radius:var(--menu-radius);
+  box-shadow:var(--menu-shadow);padding:12px 10px;backdrop-filter:blur(4px);
+  z-index:60;
+}
 .bottom-card .tab{appearance:none;-webkit-appearance:none;border:0;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:6px 8px;flex:1;min-width:0;text-align:center}
 .bottom-card .tab .icon{width:32px;height:32px;object-fit:contain;display:block}
 .bottom-card .tab span{font-size:13px;line-height:1.2;text-align:center;font-weight:600;color:var(--menu-text)}
@@ -69,74 +77,40 @@ html,body{width:100%;height:100%;font-family:Inter,system-ui,-apple-system,"Sego
 /* чтобы контент не прятался под фиксированным статусом */
 .map,#shopScreen{padding-top:240px}
 
-/* ---------- SHOP ---------- */
-#shopScreen{
-  position:relative;
-  padding: 260px 0 120px; /* меньше отступ сверху */
-}
+/* ========== SHOP ========== */
+#shopScreen{position:relative;padding:260px 0 120px}
 
-/* картинка "Магазин" */
+/* центрированная картинка «Магазин» 114×69 */
 .shop-title{
-  position: relative;
-  display:block;
-  margin: 20px auto 30px; /* автоцентр + расстояние вниз от статуса */
-  width:114px;
-  height:69px;
+  position:relative;display:block;margin:20px auto 30px;
+  width:114px;height:69px;object-fit:contain;
 }
 
-/* сетка карточек: уменьшили */
+/* сетка карточек (уменьшенная) */
 .shop-grid{
-  width: 240px;   /* уменьшаем под размер карточек */
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  width:240px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;
 }
 
-/* карточка уменьшена 1.5 раза */
+/* карточка */
 .shop-card{
-  width: 110px;
-  height: 96px;
-  background:#fff;
-  border-radius: 12px;
+  width:110px;height:96px;background:#fff;border-radius:12px;
   box-shadow:0 2px 14px rgba(72,79,76,.20);
-  padding: 8px;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-  gap:6px;
-  position:relative;
+  padding:8px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;position:relative;
 }
+.shop-card.locked{filter:grayscale(1) contrast(.9);opacity:.65;pointer-events:none}
 
-/* проценты и подпись ниже */
-.shop-meta{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  margin-bottom:6px; /* добавляем отступ вниз, ближе к прогрессу */
-}
-.shop-percent{
-  font-weight:700;
-  font-size:12px;
-  color:#484F4C;
-}
-.shop-label{
-  font-size:12px;
-  color:#484F4C;
-}
+/* подпись над полосой */
+.shop-meta{display:flex;flex-direction:column;align-items:center;margin-bottom:6px}
+.shop-percent{font-weight:700;font-size:12px;color:#484F4C}
+.shop-label{font-size:12px;color:#484F4C}
 
 /* прогресс */
-.shop-progress{
-  width: 100%;
-  height: 8px;
-  background:#E7EFE7;
-  border-radius: 999px;
-  overflow: hidden;
-  border:1px solid rgba(121,165,123,.35);
-}
-.shop-fill{
-  width: 0%;
-  height: 100%;
-  background:#79A57B;
-  transition: width .45s ease;
-}
+.shop-progress{width:100%;height:8px;background:#E7EFE7;border-radius:999px;overflow:hidden;border:1px solid rgba(121,165,123,.35)}
+.shop-fill{width:0%;height:100%;background:#79A57B;transition:width .45s ease}
+
+/* при желании разные фоны карточек */
+.shop-card.lv1{background:url('shop-card-1.png') center/cover no-repeat} */
+.shop-card.lv2{background:url('shop-card-2.png') center/cover no-repeat} */
+.shop-card.lv3{background:url('shop-card-3.png') center/cover no-repeat} */
+.shop-card.lv4{background:url('shop-card-4.png') center/cover no-repeat} */
