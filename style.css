@@ -127,76 +127,53 @@ html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,
 
 
 /* Новый блок статуса ЛК */
-.status-block{
+/* Карточка статуса (чипы + прогресс) */
+.status-card{
   position:absolute;
   top:96px; left:24px;
-  width:342px; 
-  height:auto;
+  width:342px; /* из фигмы */
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 2px 20px rgba(72,79,76,0.20);
+  padding:12px;
+}
+
+.status-row{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  background:#fff;
-  border-radius:16px;
-  box-shadow:0 2px 20px rgba(72,79,76,0.2);
-  padding:12px;
   gap:8px;
+  margin-bottom:10px;
 }
 
+/* чипы */
 .chip.gray{
-  background:#EEEBDD;
-  border-radius:27px;
-  padding:10px 16px;
-  font-size:14px;
-  font-weight:600;
-  color:#484F4C;
+  background:#EEEBDD; color:#484F4C;
+  border-radius:27px; padding:10px 16px; font-weight:700; font-size:14px;
 }
 .chip.pink{
-  background:#FFBBCE;
-  border-radius:20px;
-  padding:4px 8px;
-  font-size:14px;
-  font-weight:600;
-  color:#fff;
+  background:#FFBBCE; color:#fff;
+  border-radius:20px; padding:4px 8px; font-weight:700; font-size:14px;
 }
 .chip.green{
-  background:#79A57B;
-  border-radius:20px;
-  padding:4px 8px;
-  font-size:14px;
-  font-weight:600;
-  color:#fff;
+  background:#79A57B; color:#fff;
+  border-radius:20px; padding:4px 8px; font-weight:700; font-size:14px;
 }
 
-/* Прогресс ЛК */
-.progress-panel{
-  position:absolute;
-  top:190px; left:24px;
-  width:342px;
-  background:#fff;
-  border-radius:16px;
-  padding:10px;
-  box-shadow:0 2px 20px rgba(72,79,76,0.2);
-}
+/* подпись + сегментный прогресс в одной строке */
+.progress-line{ }
 .progress-title{
-  font-family:'Manrope',sans-serif;
-  font-size:16px;
-  font-weight:700;
-  color:#484F4C;
-  margin-bottom:6px;
+  font-family:'Manrope',sans-serif; font-weight:700; font-size:16px; color:#484F4C;
+  display:block; margin-bottom:6px;
 }
 .progress-rail{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:6px;
+  display:flex; gap:8px; align-items:center;
+  padding:6px; border-radius:14px;
+  background:#fff; border:1px solid #FFBBCE; /* как на макете */
 }
 .progress-rail .seg{
-  flex:1;
-  height:12px;
-  border-radius:14px;
-  background:#fff;
+  flex:1; height:12px; border-radius:12px;
+  background:#ffffff;
   border:1px solid #FFBBCE;
 }
-.progress-rail .seg.on{
-  background:#FFBBCE;
-}
+.progress-rail .seg.on{ background:#FFBBCE; }
