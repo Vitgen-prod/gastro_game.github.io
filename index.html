@@ -21,22 +21,24 @@
   <div class="app hidden" id="cabinet">
 
     <!-- Новый блок статуса -->
-    <header class="status-block" id="statusBlock">
-      <div class="chip gray">Вы</div>
-      <div class="chip pink"><span id="levelValue">1</span> уровень</div>
-      <div class="chip green"><span id="scoreValue">9999</span> Nom</div>
-    </header>
+<div class="status-card" id="statusBlock">
+  <div class="status-row">
+    <div class="chip gray">Вы</div>
+    <div class="chip pink"><span id="levelValue">1</span> уровень</div>
+    <div class="chip green"><span id="scoreValue">0</span> Nom</div>
+  </div>
 
-    <div class="progress-panel">
-      <div class="progress-title">До нового уровня</div>
-      <div class="progress-rail" id="progressRail">
-        <div class="seg"></div>
-        <div class="seg"></div>
-        <div class="seg"></div>
-        <div class="seg"></div>
-        <div class="seg"></div>
-      </div>
+  <div class="progress-line">
+    <span class="progress-title">До нового уровня</span>
+    <div class="progress-rail" id="progressRail">
+      <div class="seg"></div>
+      <div class="seg"></div>
+      <div class="seg"></div>
+      <div class="seg"></div>
+      <div class="seg"></div>
     </div>
+  </div>
+</div>
 
     <!-- Попап -->
     <div class="overlay" id="introOverlay">
