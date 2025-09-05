@@ -6,6 +6,43 @@
   <title>Gastro Nomads</title>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=6" />
+  <style>
+/* FORCE OVERRIDES */
+:root .status-card{
+  position:fixed!important; top:calc(env(safe-area-inset-top)+12px)!important;
+  left:50%!important; transform:translateX(-50%)!important;
+  width:342px!important; z-index:80!important;
+}
+:root .map, :root #shopScreen{ padding-top:240px!important; }
+:root #shopScreen{ padding:260px 0 120px!important; }
+
+/* заголовок "Магазин" картинкой — по центру */
+:root #shopScreen .shop-title{
+  position:relative!important; left:auto!important; top:auto!important; transform:none!important;
+  display:block!important; width:114px!important; height:69px!important;
+  margin:12px auto 24px!important;
+}
+
+/* сетка и карточки магазина (уменьшенные) */
+:root #shopScreen .shop-grid{
+  width:240px!important; margin:0 auto!important;
+  display:grid!important; grid-template-columns:repeat(2,1fr)!important; gap:14px!important;
+}
+:root #shopScreen .shop-card{
+  width:110px!important; height:96px!important; border-radius:12px!important; padding:8px!important;
+  box-shadow:0 2px 14px rgba(72,79,76,.2)!important; position:relative!important; gap:6px!important;
+}
+
+/* проценты и подпись над прогрессом */
+:root #shopScreen .shop-meta{
+  display:flex!important; flex-direction:column!important; align-items:center!important;
+  margin:0 0 6px!important;
+}
+:root #shopScreen .shop-percent{ font-size:12px!important; font-weight:700!important; color:#484F4C!important; }
+:root #shopScreen .shop-label{ font-size:12px!important; color:#484F4C!important; }
+:root #shopScreen .shop-progress{ height:8px!important; }
+</style>
+
 </head>
 <body>
 
