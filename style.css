@@ -78,33 +78,73 @@ html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,
 .popup-btn:active{ transform:translateX(-50%) scale(0.98); }
 
 /* ===== Карточка статуса вверху (чипы + прогресс) ===== */
+/* === Статус-карточка сверху === */
 .status-card{
-  width:100%;
+  position:absolute;
+  z-index:20;
+  /* у самого верха, безопасно для iOS-выреза */
+  top:calc(env(safe-area-inset-top) + 8px);
+  left:50%;
+  transform:translateX(-50%);
+  width:calc(100% - 24px);
   max-width:420px;
-  margin:16px auto 12px;          /* сверху, по центру */
+
   background:#fff;
   border-radius:16px;
   box-shadow:0 2px 20px rgba(72,79,76,0.20);
   padding:12px;
 }
-.status-row{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:8px; margin-bottom:10px;
-}
-.chip.gray{ background:#EEEBDD; color:#484F4C; border-radius:27px; padding:10px 16px; font-weight:700; font-size:14px; }
-.chip.pink{ background:#FFBBCE; color:#fff; border-radius:20px; padding:4px 8px; font-weight:700; font-size:14px; }
-.chip.green{ background:#79A57B; color:#fff; border-radius:20px; padding:4px 8px; font-weight:700; font-size:14px; }
 
-/* подпись + сегментный прогресс */
-.progress-line{}
-.progress-title{ font-family:'Manrope',sans-serif; font-weight:700; font-size:16px; color:#484F4C; display:block; margin-bottom:6px; }
-.progress-rail{
-  display:flex; gap:8px; align-items:center;
-  padding:6px; border-radius:14px;
-  background:#fff; border:1px solid #FFBBCE;
+.status-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:10px;
 }
-.progress-rail .seg{
-  flex:1; height:12px; border-radius:12px;
-  background:#ffffff; border:1px solid #FFBBCE;
+
+/* Чипы внутри карточки: не растягиваем, держим размер по контенту */
+.status-card .chip{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  white-space:nowrap;
+  flex:0 0 auto;           /* <— ключевое: не растягивать */
+  height:32px;
+  font-weight:700;
+  font-size:14px;
+  padding:4px 12px;
+  border-radius:20px;
 }
-.progress-rail .seg.on{ background:#FFBBCE; }
+
+.status-card .chip.gray  { background:#EEEBDD; color:#484F4C; border-radius:27px; padding:10px 16px; height:52px; }
+.status-card .chip.pink  { background:#FFBBCE; color:#fff; }
+.status-card .chip.green { background:#79A57B; color:#fff; }
+
+/* Подпись + сегменты */
+.status-card .progress-title{
+  display:block;
+  margin-bottom:6px;
+  font-family:'Manrope',sans-serif;
+  font-weight:700;
+  font-size:16px;
+  color:#484F4C;
+}
+
+.status-card .progress-rail{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px;
+  border-radius:14px;
+  background:#fff;
+  border:1px solid #FFBBCE;
+}
+.status-card .progress-rail .seg{
+  flex:1;
+  height:12px;
+  border-radius:12px;
+  background:#fff;
+  border:1px solid #FFBBCE;
+}
+.status-card .progress-rail .seg.on{ background:#FFBBCE; }
