@@ -35,11 +35,22 @@
 
 
     <!-- Верхняя панель -->
-    <header class="topbar">
-      <div class="chip">← Назад</div>
-      <div class="chip pink">Вы • <span data-field="Level">1</span> уровень</div>
-      <div class="chip green"><span data-field="Score">9999</span> Nom</div>
-    </header>
+    <header class="status-block" id="statusBlock">
+  <div class="chip gray">Вы</div>
+  <div class="chip pink"><span id="levelValue">1</span> уровень</div>
+  <div class="chip green"><span id="scoreValue">9999</span> Nom</div>
+</header>
+
+<div class="progress-panel">
+  <div class="progress-title">До нового уровня</div>
+  <div class="progress-rail" id="progressRail">
+    <div class="seg"></div>
+    <div class="seg"></div>
+    <div class="seg"></div>
+    <div class="seg"></div>
+    <div class="seg"></div>
+  </div>
+</div>
 
     <!-- Карта -->
     <main class="map" id="mapScreen" aria-hidden="true">
