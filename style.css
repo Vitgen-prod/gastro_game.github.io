@@ -130,8 +130,8 @@ html,body{width:100%;height:100%;font-family:Inter,system-ui,-apple-system,"Sego
 /* картинка "Магазин" строго по центру, 114x69 */
 .shop-title{
   display:block !important;
-  width:114px !important; height:69px !important;
-  margin:20px auto 30px !important;
+  width:57px !important; height:34px !important;
+  margin:10px auto 15px !important;
   object-fit:contain !important;
 }
 
