@@ -92,49 +92,63 @@
     </nav>
   </div>
 
-<section id="shopScreen" class="hidden">
-  <!-- тот же верхний блок уже есть, поэтому здесь только контент страницы -->
-
-  <div class="shop-title">
-    <span>Магазин</span>
-    <i class="bag"></i>
-  </div>
-
-  <div class="shop-grid">
-    <!-- level 1 -->
-    <button class="shop-card" data-level="1">
-      <div class="shop-head"><b>1&nbsp;уровень</b></div>
-      <div class="shop-progress">
-        <div class="shop-fill"></div>
+<div id="shopScreen" class="hidden">
+  <!-- фиксированный верх магазина -->
+  <div class="shop-top">
+    <header class="status-card">
+      <div class="status-row">
+        <div class="chip gray">Вы</div>
+        <div class="chip pink"><span id="levelValue">1</span> уровень</div>
+        <div class="chip green"><span id="scoreValue">0</span> Nom</div>
       </div>
-      <div class="shop-percent"><span>0</span>% прокачено</div>
-    </button>
 
-    <!-- level 2 -->
-    <button class="shop-card" data-level="2">
-      <div class="shop-head"><b>2&nbsp;уровень</b></div>
-      <div class="shop-progress"><div class="shop-fill"></div></div>
-      <div class="shop-percent"><span>0</span>% прокачено</div>
-      <div class="shop-lock" aria-hidden="true">🔒</div>
-    </button>
+      <div class="progress-line">
+        <span class="progress-title">До нового уровня</span>
+        <div class="progress-rail" id="progressRail">
+          <div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div>
+        </div>
+      </div>
+    </header>
 
-    <!-- level 3 -->
-    <button class="shop-card" data-level="3">
-      <div class="shop-head"><b>3&nbsp;уровень</b></div>
-      <div class="shop-progress"><div class="shop-fill"></div></div>
-      <div class="shop-percent"><span>0</span>% прокачено</div>
-      <div class="shop-lock" aria-hidden="true">🔒</div>
-    </button>
-
-    <!-- level 4 -->
-    <button class="shop-card" data-level="4">
-      <div class="shop-head"><b>4&nbsp;уровень</b></div>
-      <div class="shop-progress"><div class="shop-fill"></div></div>
-      <div class="shop-percent"><span>0</span>% прокачено</div>
-      <div class="shop-lock" aria-hidden="true">🔒</div>
-    </button>
+    <!-- КАРТИНКА НАЗВАНИЯ -->
+    <img src="shop-title.png" alt="Магазин" class="shop-title">
   </div>
-</section>
+
+  <!-- сетка карточек -->
+  <section class="shop-grid">
+    <div class="shop-card lv1" data-level="1">
+      <div class="shop-meta">
+        <div class="shop-percent"><span>0</span>%</div>
+        <div class="shop-label">прокачено</div>
+      </div>
+      <div class="shop-progress"><i class="shop-fill"></i></div>
+    </div>
+
+    <div class="shop-card lv2 locked" data-level="2">
+      <div class="shop-meta">
+        <div class="shop-percent"><span>0</span>%</div>
+        <div class="shop-label">прокачено</div>
+      </div>
+      <div class="shop-progress"><i class="shop-fill"></i></div>
+    </div>
+
+    <div class="shop-card lv3 locked" data-level="3">
+      <div class="shop-meta">
+        <div class="shop-percent"><span>0</span>%</div>
+        <div class="shop-label">прокачено</div>
+      </div>
+      <div class="shop-progress"><i class="shop-fill"></i></div>
+    </div>
+
+    <div class="shop-card lv4 locked" data-level="4">
+      <div class="shop-meta">
+        <div class="shop-percent"><span>0</span>%</div>
+        <div class="shop-label">прокачено</div>
+      </div>
+      <div class="shop-progress"><i class="shop-fill"></i></div>
+    </div>
+  </section>
+</div>
 
   
   <script src="script.js"></script>
