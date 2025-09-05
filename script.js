@@ -88,8 +88,9 @@ async function loadFromAPI(id){
     if (j.ok){
       state.id = id;
       state.level = Number(j.data.level)||1;
-      state.score = Number(j.data.score)||0;
-      state.purchases = Math.max(0, Math.min(5, Number(j.data.progress)||0)); // 0..5
+      state.level     = Number(j.data.level ?? j.data.Level) || 1;
+      state.score     = Number(j.data.Score ?? j.data.score) || 0;      // ← главная правка
+      state.purchases = Math.max(0, Math.min(5, Number(j.data.progress ?? 0))); // если поля нет — 0
       renderStatus(); saveLocal();
     } else {
       state.id = id; renderStatus(); saveLocal();
