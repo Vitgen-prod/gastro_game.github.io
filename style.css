@@ -1,4 +1,3 @@
-
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial; }
 :root{
@@ -10,35 +9,25 @@ html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,
 }
 
 /* Стартовый экран */
-/* фон стартовой — мобильный */
 .container{
   position:fixed; inset:0;
-  background:url('фон11.png') center/cover no-repeat; /* твой мобильный фон */
+  background:url('фон11.png') center/cover no-repeat;
 }
-
-/* скрыть старые элементы, если где-то остались */
 .header,.title,.logo{ display:none !important; }
-
-/* позиция кнопки */
 .action{
   position:absolute;
   bottom:max(32px, env(safe-area-inset-bottom));
   left:50%; transform:translateX(-50%);
 }
-
-/* размер кнопки-картинки */
 .start-image-btn{
-  display:block;
-  width:342px;   /* как в макете */
-  height:60px;
-  cursor:pointer;
+  display:block; width:342px; height:60px; cursor:pointer;
 }
 
 /* Личный кабинет */
 .hidden { display:none !important; }
 .app { position:fixed; inset:0; display:flex; flex-direction:column; background:url('фон2.png') center/cover no-repeat; }
 
-/* Верхняя панель */
+/* Верхняя панель (не используется сейчас, можно оставить) */
 .topbar { padding:12px 16px; display:flex; gap:12px; align-items:center; }
 .chip { background:#fff; border-radius:999px; padding:8px 12px; font-size:14px; display:flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(0,0,0,.08); }
 .chip.pink{ background:#ffe8ef; color:#c53063; }
@@ -79,101 +68,47 @@ html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,
 .bottom-card .divider{ width:1px; height:30px; background:var(--menu-divider); display:block; opacity:.9; }
 .bottom-card .tab:active{ transform:scale(.96); }
 
-/* Попап (исправлено) */
-.overlay{
-  position:fixed; inset:0; background:rgba(0,0,0,.45);
-  display:flex; align-items:center; justify-content:center;
-  z-index:1000; overflow:auto;
-}
-.popup{
-  position:relative; width:90%; max-width:360px;
-  margin:24px 0; /* место на экранах с маленькой высотой */
-}
-.popup-title{
-  position:absolute;
-  top:-22px;
-  left:50%;
-  transform:translateX(-50%);
-  width:calc(100% - 32px);   /* внутри карточки */
-  max-width:340px;           /* под макет */
-  height:auto;
-  display:block;
-  z-index:5;
-  margin:0;
-}
+/* Попап */
+.overlay{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; z-index:1000; overflow:auto; }
+.popup{ position:relative; width:90%; max-width:360px; margin:24px 0; }
+.popup-title{ position:absolute; top:-22px; left:50%; transform:translateX(-50%); width:calc(100% - 32px); max-width:340px; height:auto; display:block; z-index:5; margin:0; }
 .popup-bg{ width:100%; display:block; z-index:1; }
-
-.popup-content{
-  position:absolute; top:45px; left:0; right:0;
-  padding:20px 20px 88px;   /* снизу запас под кнопку */
-  display:flex; flex-direction:column; align-items:center; gap:6px; z-index:2;
-}
+.popup-content{ position:absolute; top:45px; left:0; right:0; padding:20px 20px 88px; display:flex; flex-direction:column; align-items:center; gap:6px; z-index:2; }
 .popup-content img{ max-width:90%; height:auto; }
-.popup-content img:nth-child(1) {
-  margin-top: -20px; /* можно регулировать значением */
-}
+.popup-content img:nth-child(1){ margin-top:-20px; }
 .popup-content img:nth-child(2){ margin-top:35px; }
 .popup-content img:nth-child(3){ margin-top:10px; }
-
-/* Кнопка как в фигме */
-.popup-btn{
-  position:absolute; left:50%; bottom:20px; transform:translateX(-50%);
-  background:#FFBBCE; border:0; border-radius:38px; padding:8px 30px;
-  font-family:'Manrope',sans-serif; font-size:16px; font-weight:700; line-height:1; text-transform:uppercase; text-align:center; color:#fff;
-  z-index:5; /* поверх контента */
-  box-shadow:0 8px 20px rgba(0,0,0,.15); /* можно убрать */
-}
+.popup-btn{ position:absolute; left:50%; bottom:20px; transform:translateX(-50%); background:#FFBBCE; border:0; border-radius:38px; padding:8px 30px; font-family:'Manrope',sans-serif; font-size:16px; font-weight:700; line-height:1; text-transform:uppercase; text-align:center; color:#fff; z-index:5; box-shadow:0 8px 20px rgba(0,0,0,.15); }
 .popup-btn:active{ transform:translateX(-50%) scale(0.98); }
 
-
-/* Новый блок статуса ЛК */
-/* Карточка статуса (чипы + прогресс) */
+/* ===== Карточка статуса вверху (чипы + прогресс) ===== */
 .status-card{
-  position:absolute;
-  top:96px; left:24px;
-  width:342px; /* из фигмы */
+  width:100%;
+  max-width:420px;
+  margin:16px auto 12px;          /* сверху, по центру */
   background:#fff;
   border-radius:16px;
   box-shadow:0 2px 20px rgba(72,79,76,0.20);
   padding:12px;
 }
-
 .status-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  margin-bottom:10px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:8px; margin-bottom:10px;
 }
+.chip.gray{ background:#EEEBDD; color:#484F4C; border-radius:27px; padding:10px 16px; font-weight:700; font-size:14px; }
+.chip.pink{ background:#FFBBCE; color:#fff; border-radius:20px; padding:4px 8px; font-weight:700; font-size:14px; }
+.chip.green{ background:#79A57B; color:#fff; border-radius:20px; padding:4px 8px; font-weight:700; font-size:14px; }
 
-/* чипы */
-.chip.gray{
-  background:#EEEBDD; color:#484F4C;
-  border-radius:27px; padding:10px 16px; font-weight:700; font-size:14px;
-}
-.chip.pink{
-  background:#FFBBCE; color:#fff;
-  border-radius:20px; padding:4px 8px; font-weight:700; font-size:14px;
-}
-.chip.green{
-  background:#79A57B; color:#fff;
-  border-radius:20px; padding:4px 8px; font-weight:700; font-size:14px;
-}
-
-/* подпись + сегментный прогресс в одной строке */
-.progress-line{ }
-.progress-title{
-  font-family:'Manrope',sans-serif; font-weight:700; font-size:16px; color:#484F4C;
-  display:block; margin-bottom:6px;
-}
+/* подпись + сегментный прогресс */
+.progress-line{}
+.progress-title{ font-family:'Manrope',sans-serif; font-weight:700; font-size:16px; color:#484F4C; display:block; margin-bottom:6px; }
 .progress-rail{
   display:flex; gap:8px; align-items:center;
   padding:6px; border-radius:14px;
-  background:#fff; border:1px solid #FFBBCE; /* как на макете */
+  background:#fff; border:1px solid #FFBBCE;
 }
 .progress-rail .seg{
   flex:1; height:12px; border-radius:12px;
-  background:#ffffff;
-  border:1px solid #FFBBCE;
+  background:#ffffff; border:1px solid #FFBBCE;
 }
 .progress-rail .seg.on{ background:#FFBBCE; }
