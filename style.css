@@ -1,3 +1,4 @@
+/* ========== BASE ========== */
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial; }
 :root{
@@ -8,7 +9,7 @@ html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,
   --menu-text:#4b5656;
 }
 
-/* Стартовый экран */
+/* ========== START (splash) ========== */
 .container{
   position:fixed; inset:0;
   background:url('фон11.png') center/cover no-repeat;
@@ -23,20 +24,19 @@ html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,
   display:block; width:342px; height:60px; cursor:pointer;
 }
 
-/* Личный кабинет */
+/* ========== APP (cabinet common) ========== */
 .hidden { display:none !important; }
 .app { position:fixed; inset:0; display:flex; flex-direction:column; background:url('фон2.png') center/cover no-repeat; }
 
-/* Верхняя панель (не используется сейчас, можно оставить) */
+/* (old topbar, may keep) */
 .topbar { padding:12px 16px; display:flex; gap:12px; align-items:center; }
 .chip { background:#fff; border-radius:999px; padding:8px 12px; font-size:14px; display:flex; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(0,0,0,.08); }
 .chip.pink{ background:#ffe8ef; color:#c53063; }
 .chip.green{ background:#e9fff7; color:#1d6b62; }
 
-/* Карта */
+/* ========== MAP ========== */
 .map { position:relative; flex:1; padding:8px 12px; }
-
-.map-canvas{ position:relative; margin-top:0px; border-radius:18px; overflow:hidden; min-height:520px; background:rgba(255,255,255,.55); }
+.map-canvas{ position:relative; margin-top:0; border-radius:18px; overflow:hidden; min-height:520px; background:rgba(255,255,255,.55); }
 .lvl{ position:absolute; display:flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:50%; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.14); font-weight:700; color:#333; border:2px solid #fff; cursor:pointer; }
 .lvl[data-level="1"]{ left:18px; top:40px; }
 .lvl[data-level="2"]{ right:26px; top:150px; }
@@ -47,7 +47,7 @@ html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,
 .cta{ position:sticky; bottom:10px; margin-top:10px; }
 .btn{ width:100%; height:56px; border:0; border-radius:14px; background:#3a3f3f; color:#fff; font-size:16px; font-weight:700; letter-spacing:.2px; box-shadow:0 8px 20px rgba(0,0,0,.18); cursor:pointer; }
 
-/* Меню */
+/* ========== BOTTOM NAV ========== */
 .bottom-card{
   position:fixed; left:50%; transform:translateX(-50%);
   bottom:max(8px, env(safe-area-inset-bottom));
@@ -57,6 +57,7 @@ html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,
   border-radius:var(--menu-radius);
   box-shadow:var(--menu-shadow);
   padding:12px 10px; backdrop-filter:blur(4px);
+  z-index:60;
 }
 .bottom-card .tab{ appearance:none; -webkit-appearance:none; border:0; background:transparent; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; padding:6px 8px; flex:1; min-width:0; text-align:center; }
 .bottom-card .tab .icon{ width:32px; height:32px; object-fit:contain; display:block; }
@@ -64,7 +65,7 @@ html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,
 .bottom-card .divider{ width:1px; height:30px; background:var(--menu-divider); display:block; opacity:.9; }
 .bottom-card .tab:active{ transform:scale(.96); }
 
-/* Попап */
+/* ========== POPUP ========== */
 .overlay{ position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; z-index:1000; overflow:auto; }
 .popup{ position:relative; width:90%; max-width:360px; margin:24px 0; }
 .popup-title{ position:absolute; top:-22px; left:50%; transform:translateX(-50%); width:calc(100% - 32px); max-width:340px; height:auto; display:block; z-index:5; margin:0; }
@@ -77,143 +78,96 @@ html, body { width:100%; height:100%; font-family:Inter,system-ui,-apple-system,
 .popup-btn{ position:absolute; left:50%; bottom:20px; transform:translateX(-50%); background:#FFBBCE; border:0; border-radius:38px; padding:8px 30px; font-family:'Manrope',sans-serif; font-size:16px; font-weight:700; line-height:1; text-transform:uppercase; text-align:center; color:#fff; z-index:5; box-shadow:0 8px 20px rgba(0,0,0,.15); }
 .popup-btn:active{ transform:translateX(-50%) scale(0.98); }
 
-/* ===== Карточка статуса вверху (чипы + прогресс) ===== */
-/* === Статус-карточка сверху === */
+/* ========== STATUS CARD (fixed top, chips + segmented progress) ========== */
 .status-card{
-  position:absolute;
-  z-index:20;
-  /* у самого верха, безопасно для iOS-выреза */
-  top:calc(env(safe-area-inset-top) + 8px);
-  left:50%;
-  transform:translateX(-50%);
-  width:calc(100% - 24px);
-  max-width:420px;
-
+  position:fixed;
+  top:calc(12px + env(safe-area-inset-top));
+  left:12px; right:12px;
+  width:auto;
   background:#fff;
   border-radius:16px;
-  box-shadow:0 2px 20px rgba(72,79,76,0.20);
+  box-shadow:0 2px 20px rgba(72,79,76,.20);
   padding:12px;
+  z-index:50;
 }
-
 .status-row{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  margin-bottom:10px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:8px; margin-bottom:10px;
 }
-
-/* Чипы внутри карточки: не растягиваем, держим размер по контенту */
 .status-card .chip{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  white-space:nowrap;
-  flex:0 0 auto;           /* <— ключевое: не растягивать */
-  height:32px;
-  font-weight:700;
-  font-size:14px;
-  padding:4px 12px;
-  border-radius:20px;
+  display:inline-flex; align-items:center; justify-content:center;
+  white-space:nowrap; flex:0 0 auto;
+  height:32px; font-weight:700; font-size:14px; padding:4px 12px; border-radius:20px;
 }
-
 .status-card .chip.gray  { background:#EEEBDD; color:#484F4C; border-radius:27px; padding:10px 16px; height:52px; }
 .status-card .chip.pink  { background:#FFBBCE; color:#fff; }
 .status-card .chip.green { background:#79A57B; color:#fff; }
-
-/* Подпись + сегменты */
 .status-card .progress-title{
-  display:block;
-  margin-bottom:6px;
-  font-family:'Manrope',sans-serif;
-  font-weight:700;
-  font-size:16px;
-  color:#484F4C;
+  display:block; margin-bottom:6px;
+  font-family:'Manrope',sans-serif; font-weight:700; font-size:16px; color:#484F4C;
 }
-
 .status-card .progress-rail{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:6px;
-  border-radius:14px;
-  background:#fff;
-  border:1px solid #FFBBCE;
+  display:flex; align-items:center; gap:8px;
+  padding:6px; border-radius:14px; background:#fff; border:1px solid #FFBBCE;
 }
 .status-card .progress-rail .seg{
-  flex:1;
-  height:12px;
-  border-radius:12px;
-  background:#fff;
-  border:1px solid #FFBBCE;
+  flex:1; height:12px; border-radius:12px; background:#fff; border:1px solid #FFBBCE;
 }
 .status-card .progress-rail .seg.on{ background:#FFBBCE; }
 
-/* ---------- SHOP ---------- */
-#shopScreen{
-  position:relative;
-  padding: 329px 0 120px;      /* отступ сверху как в макете (Top=329) + место под меню */
-}
+/* отступ, чтобы контент не залезал под фиксированный блок */
+.map, #shopScreen{ padding-top:230px; }
 
+/* ========== SHOP ========== */
+/* фикс-верх контейнер (держит статус и картинку-заголовок) */
+.shop-top{
+  position:fixed; top:0; left:0; right:0; z-index:45; pointer-events:none;
+}
+/* картинка “Магазин” 114×69 по центру под статусом */
 .shop-title{
-  position: absolute;
-  top: 329px; left: 24px;
-  width: 165px; height: 45px;
-  display:flex; align-items:center; justify-content:center;
-  background:#fff;
-  border-radius: 999px;
-  box-shadow:0 2px 20px rgba(72,79,76,.20);
-  font-family:'Manrope',sans-serif; font-weight:700; font-size:20px; color:#484F4C;
-}
-.shop-title .bag{
-  width: 28px; height: 28px; margin-left: 8px;
-  background: url('shop.png') center/contain no-repeat;
+  position:fixed;
+  top:calc(150px + env(safe-area-inset-top));
+  left:50%; transform:translateX(-50%);
+  width:114px; height:69px; object-fit:contain;
+  z-index:55; pointer-events:auto;
 }
 
-/* сетка 2x2 по 165x145 */
+/* сетка карточек */
+#shopScreen{ position:relative; padding-bottom:120px; }
 .shop-grid{
-  width: 342px; margin: 72px auto 0;   /* под заголовком */
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-.shop-card{
-  width: 165px; height: 145px;
-  background:#fff;
-  border-radius: 16px;
-  box-shadow:0 2px 20px rgba(72,79,76,.20);
-  padding: 12px;
-  display:flex; flex-direction:column; justify-content:flex-end; gap:10px;
-}
-.shop-card .shop-head{
-  position:absolute; top:10px; left:12px;
-  background:#F3F3F3; color:#6b6f6d;
-  padding:6px 10px; border-radius:10px;
-  font-weight:700; font-size:14px;
-}
-.shop-card .shop-lock{
-  position:absolute; top:10px; right:10px; font-size:18px; opacity:.9;
-}
-.shop-card.locked{
-  filter: grayscale(1) contrast(.9); opacity:.6; pointer-events:none;
+  display:grid; grid-template-columns:1fr 1fr; gap:16px;
+  padding:0 16px 120px;
 }
 
+/* карточка с кастомным фоном (замени на свои изображения) */
+.shop-card{
+  position:relative; min-height:160px; border-radius:16px; overflow:hidden;
+  padding:14px 14px 16px; background:#F4F4F4; background-size:cover; background-position:center;
+  box-shadow:0 2px 10px rgba(0,0,0,.06); cursor:pointer;
+}
+.shop-card.lv1{ background-image:url('card-lv1.png'); }
+.shop-card.lv2{ background-image:url('card-lv2.png'); }
+.shop-card.lv3{ background-image:url('card-lv3.png'); }
+.shop-card.lv4{ background-image:url('card-lv4.png'); }
+.shop-card.locked{ filter:grayscale(1) contrast(.9) brightness(.9); cursor:default; }
+.shop-card.locked::after{ content:""; position:absolute; inset:0; background:rgba(0,0,0,.15); }
+
+/* верх карточки: проценты + подпись */
+.shop-meta{
+  display:flex; align-items:baseline; gap:6px; color:#2b2f2e;
+  text-shadow:0 1px 0 rgba(255,255,255,.6);
+}
+.shop-percent{ font-weight:800; font-size:22px; line-height:1; }
+.shop-label{ font-weight:600; font-size:14px; opacity:.9; }
+
+/* низ карточки: прогресс-бар */
 .shop-progress{
-  width: 100%; height: 12px;
-  background:#E7EFE7;
-  border-radius: 999px;
-  overflow: hidden;
-  border:1px solid rgba(121,165,123,.35);
+  position:absolute; left:14px; right:14px; bottom:14px;
+  height:12px; border-radius:999px; background:rgba(0,0,0,.06);
+  overflow:hidden;
 }
 .shop-fill{
-  width: 0%;
-  height: 100%;
+  display:block; height:100%; width:0%;
   background:#79A57B;
-  transition: width .45s ease; /* плавное заполнение */
+  transition:width .45s ease;
 }
-
-.shop-percent{
-  font-weight:700; font-size:14px; color:#484F4C;
-  display:flex; align-items:center; gap:6px;
-}
-.shop-percent span{ min-width: 2ch; text-align:right; }
