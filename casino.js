@@ -185,11 +185,56 @@ function trySpin(){
     saveLocal(); persistSession(); renderUI();
 
     // запись в таблицу: score += value, Spins -= 1
-    updateUserOnAPI({addScore:value, useSpins:1}).catch(()=>{});
+    async function updateUserOnAPI({ addScore=0, useSpins=0 } = {}) {
+  const id   = state.id;
+  const inc  = Number(addScore) || 0;
+  const dec  = Math.abs(Number(useSpins) || 0);
 
-    spinning = false;
-    renderUI();
-  }, {once:true});
+  const qs = new URLSearchParams({
+    action: 'update',
+    id,
+    addScore: inc,          // вариант 1
+    addSpins: -dec,
+    scoreDelta: inc,        // вариант 2 (на случай иных имён)
+    spinsDelta: -dec,
+    t: Date.now()
+  });
+
+  // 1) пробуем GET (часто именно так сделан doGet в Apps Script)
+  try {
+    const r = await fetch(`${API}?${qs.toString()}`, { cache: 'no-store' });
+    if (r.ok) {
+      try { const j = await r.json(); if (j && (j.ok || j.result === 'ok')) return true; } catch { return true; }
+    }
+  } catch {}
+
+  // 2) пробуем POST form-urlencoded (часто так устроен doPost)
+  try {
+    const r = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: qs.toString()
+    });
+    if (r.ok) return true;
+  } catch {}
+
+  // 3) запасной вариант — JSON
+  try {
+    const r = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'update', id,
+        addScore: inc, addSpins: -dec,
+        scoreDelta: inc, spinsDelta: -dec
+      })
+    });
+    if (r.ok) return true;
+  } catch {}
+
+  console.warn('API update failed');
+  return false;
+}
 }
 
 /* ===== Навигация нижнего меню ===== */
