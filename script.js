@@ -1,4 +1,4 @@
-/* ===== Глобальные ссылки на узлы ===== */
+/* ===== Глобальные узлы ===== */
 const startBtn    = document.getElementById('startBtn');
 const startScreen = document.getElementById('startScreen');
 const cabinet     = document.getElementById('cabinet');
@@ -6,7 +6,7 @@ const overlay     = document.getElementById('introOverlay');
 const mapScreen   = document.getElementById('mapScreen');
 const shopScreen  = document.getElementById('shopScreen');
 
-/* ===== Конфиг API ===== */
+/* ===== API ===== */
 const API = 'https://script.google.com/macros/s/AKfycbzk_bfXNQ3aRDQQ6v6qVRSfdf3iUha3qnpwxGzLnTwJVwMsmlfuUv5kgGJwV-yK7nzmmA/exec';
 
 /* ===== Состояние ===== */
@@ -14,6 +14,7 @@ const state = { id:null, level:1, score:0, purchases:0 };
 
 /* ===== Утилиты ===== */
 const lsKey = id => `gn_user_${id}`;
+
 function renderStatus(){
   document.querySelectorAll('[data-bind="level"]').forEach(n => n.textContent = state.level);
   document.querySelectorAll('[data-bind="score"]').forEach(n => n.textContent = state.score);
@@ -61,7 +62,7 @@ function getClientId(){
   return (u.searchParams.get('id') || 'demo').trim();
 }
 
-/* ===== Публичные ===== */
+/* ===== Публичные сеттеры ===== */
 window.setPurchases = n => { state.purchases = Math.max(0, Math.min(5, Number(n)||0)); renderStatus(); saveLocal(); };
 window.addPurchase  = () => { if (state.purchases < 5){ state.purchases += 1; renderStatus(); saveLocal(); } };
 window.setScore     = v => { state.score = Number(v)||0; renderStatus(); saveLocal(); };
@@ -109,12 +110,12 @@ startBtn.addEventListener('click', async () => {
   renderStatus();
 });
 
-/* ===== Попап ===== */
+/* ===== Попап-интро ===== */
 document.getElementById('btnOk').addEventListener('click', () => overlay.classList.add('hidden'));
 
-/* ===== Демо кнопки ===== */
+/* ===== Демо-кнопки карты ===== */
 document.querySelectorAll('.lvl').forEach(btn => btn.addEventListener('click', () => console.log('LEVEL', btn.dataset.level)));
-document.getElementById('openLevel')?.addEventListener('click', () => { window.addPurchase(); console.log('Progress:', state.purchases * 20 + '%'); });
+document.getElementById('openLevel')?.addEventListener('click', () => { window.addPurchase(); });
 
 /* ===== Нижнее меню ===== */
 document.querySelectorAll('#bottomNav .tab').forEach(tab => {
