@@ -15,15 +15,11 @@
 }
 :root .map, :root #shopScreen{ padding-top:240px!important; }
 :root #shopScreen{ padding:260px 0 120px!important; }
-
-/* заголовок "Магазин" картинкой — по центру */
 :root #shopScreen .shop-title{
   position:relative!important; left:auto!important; top:auto!important; transform:none!important;
   display:block!important; width:114px!important; height:69px!important;
   margin:12px auto 24px!important;
 }
-
-/* сетка и карточки магазина (уменьшенные) */
 :root #shopScreen .shop-grid{
   width:240px!important; margin:0 auto!important;
   display:grid!important; grid-template-columns:repeat(2,1fr)!important; gap:14px!important;
@@ -32,21 +28,15 @@
   width:110px!important; height:96px!important; border-radius:12px!important; padding:8px!important;
   box-shadow:0 2px 14px rgba(72,79,76,.2)!important; position:relative!important; gap:6px!important;
 }
-
-/* проценты и подпись над прогрессом */
-:root #shopScreen .shop-meta{
-  display:flex!important; flex-direction:column!important; align-items:center!important;
-  margin:0 0 6px!important;
-}
+:root #shopScreen .shop-meta{ display:flex!important; flex-direction:column!important; align-items:center!important; margin:0 0 6px!important; }
 :root #shopScreen .shop-percent{ font-size:12px!important; font-weight:700!important; color:#484F4C!important; }
 :root #shopScreen .shop-label{ font-size:12px!important; color:#484F4C!important; }
 :root #shopScreen .shop-progress{ height:8px!important; }
-</style>
-
+  </style>
 </head>
 <body>
 
-  <!-- Стартовый экран (только фон + кнопка) -->
+  <!-- Стартовый экран -->
   <div class="container" id="startScreen">
     <div class="action">
       <img src="start-btn.png" alt="Начать игру" id="startBtn" class="start-image-btn">
@@ -56,22 +46,17 @@
   <!-- Приложение -->
   <div class="app hidden" id="cabinet">
 
-    <!-- Карточка статуса (фикс сверху) -->
+    <!-- Статус -->
     <div class="status-card" id="statusBlock">
       <div class="status-row">
         <div class="chip gray">Вы</div>
         <div class="chip pink"><span data-bind="level">1</span> уровень</div>
         <div class="chip green"><span data-bind="score">0</span> Nom</div>
       </div>
-
       <div class="progress-line">
         <span class="progress-title">До нового уровня</span>
         <div class="progress-rail">
-          <div class="seg"></div>
-          <div class="seg"></div>
-          <div class="seg"></div>
-          <div class="seg"></div>
-          <div class="seg"></div>
+          <div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div>
         </div>
       </div>
     </div>
@@ -80,7 +65,7 @@
     <div class="overlay" id="introOverlay">
       <div class="popup">
         <img src="shapkapopapp.png" alt="Заголовок" class="popup-title">
-        <img src="razdelitelpopapp.png" alt="фон с линиями" class="popup-bg">
+        <img src="razdelitelpopapp.png" alt="фон" class="popup-bg">
         <div class="popup-content">
           <img src="В нашем клубе вы пройдете через 4 уникальных уровня.png" alt="">
           <img src="Как повысить уровень и что вас ждет_.png" alt="">
@@ -90,7 +75,7 @@
       </div>
     </div>
 
-    <!-- Экран карты -->
+    <!-- Карта -->
     <main class="map" id="mapScreen" aria-hidden="true">
       <div class="map-canvas" id="mapCanvas">
         <button class="lvl" data-level="1"><span>1</span><span class="sub">уровень</span></button>
@@ -98,69 +83,44 @@
         <button class="lvl" data-level="3"><span>3</span><span class="sub">уровень</span></button>
         <button class="lvl" data-level="4"><span>4</span><span class="sub">уровень</span></button>
       </div>
-
       <div class="cta">
         <button class="btn" id="openLevel">ОТКРЫТЬ НОВЫЙ УРОВЕНЬ</button>
       </div>
     </main>
 
-    <!-- Экран магазина -->
+    <!-- Магазин -->
     <div id="shopScreen" class="hidden">
-      <div class="shop-top">
-        <!-- такой же статус, без id, с data-bind чтобы обновлялись оба -->
-        <header class="status-card">
-          <div class="status-row">
-            <div class="chip gray">Вы</div>
-            <div class="chip pink"><span data-bind="level">1</span> уровень</div>
-            <div class="chip green"><span data-bind="score">0</span> Nom</div>
+      <header class="status-card">
+        <div class="status-row">
+          <div class="chip gray">Вы</div>
+          <div class="chip pink"><span data-bind="level">1</span> уровень</div>
+          <div class="chip green"><span data-bind="score">0</span> Nom</div>
+        </div>
+        <div class="progress-line">
+          <span class="progress-title">До нового уровня</span>
+          <div class="progress-rail">
+            <div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div>
           </div>
-          <div class="progress-line">
-            <span class="progress-title">До нового уровня</span>
-            <div class="progress-rail">
-              <div class="seg"></div>
-              <div class="seg"></div>
-              <div class="seg"></div>
-              <div class="seg"></div>
-              <div class="seg"></div>
-            </div>
-          </div>
-        </header>
+        </div>
+      </header>
 
-        <!-- заголовок магазина (картинка по центру, 114x69) -->
-        <img src="shop-title.png" alt="Магазин" class="shop-title-img">
-      </div>
+      <img src="shop-title.png" alt="Магазин" class="shop-title-img">
 
-      <!-- сетка карточек 2x2 -->
       <section class="shop-grid">
         <div class="shop-card lv1" data-level="1">
-          <div class="shop-meta">
-            <div class="shop-percent"><span>0</span>%</div>
-            <div class="shop-label">прокачено</div>
-          </div>
+          <div class="shop-meta"><div class="shop-percent"><span>0</span>%</div><div class="shop-label">прокачено</div></div>
           <div class="shop-progress"><i class="shop-fill"></i></div>
         </div>
-
         <div class="shop-card lv2 locked" data-level="2">
-          <div class="shop-meta">
-            <div class="shop-percent"><span>0</span>%</div>
-            <div class="shop-label">прокачено</div>
-          </div>
+          <div class="shop-meta"><div class="shop-percent"><span>0</span>%</div><div class="shop-label">прокачено</div></div>
           <div class="shop-progress"><i class="shop-fill"></i></div>
         </div>
-
         <div class="shop-card lv3 locked" data-level="3">
-          <div class="shop-meta">
-            <div class="shop-percent"><span>0</span>%</div>
-            <div class="shop-label">прокачено</div>
-          </div>
+          <div class="shop-meta"><div class="shop-percent"><span>0</span>%</div><div class="shop-label">прокачено</div></div>
           <div class="shop-progress"><i class="shop-fill"></i></div>
         </div>
-
         <div class="shop-card lv4 locked" data-level="4">
-          <div class="shop-meta">
-            <div class="shop-percent"><span>0</span>%</div>
-            <div class="shop-label">прокачено</div>
-          </div>
+          <div class="shop-meta"><div class="shop-percent"><span>0</span>%</div><div class="shop-label">прокачено</div></div>
           <div class="shop-progress"><i class="shop-fill"></i></div>
         </div>
       </section>
@@ -168,25 +128,13 @@
 
     <!-- Нижнее меню -->
     <nav class="bottom-card" id="bottomNav">
-      <button class="tab" data-tab="casino">
-        <img src="casino.png" alt="" class="icon" />
-        <span>Казино</span>
-      </button>
+      <button class="tab" data-tab="casino"><img src="casino.png" alt="" class="icon" /><span>Казино</span></button>
       <i class="divider"></i>
-      <button class="tab" data-tab="tasks">
-        <img src="tasks.png" alt="" class="icon" />
-        <span>Моё Шато</span>
-      </button>
+      <button class="tab" data-tab="tasks"><img src="tasks.png" alt="" class="icon" /><span>Моё Шато</span></button>
       <i class="divider"></i>
-      <button class="tab" data-tab="shop">
-        <img src="shop.png" alt="" class="icon" />
-        <span>Магазин</span>
-      </button>
+      <button class="tab" data-tab="shop"><img src="shop.png" alt="" class="icon" /><span>Магазин</span></button>
       <i class="divider"></i>
-      <button class="tab" data-tab="friends">
-        <img src="friends.png" alt="" class="icon" />
-        <span>Друзья</span>
-      </button>
+      <button class="tab" data-tab="friends"><img src="friends.png" alt="" class="icon" /><span>Друзья</span></button>
     </nav>
   </div>
 
