@@ -30,7 +30,7 @@ async function fetchUserFromAPI(id){
       state.id=id;
       state.level = Number(d.level ?? d.Level) || 1;
       state.score = Number(d.score ?? d.Score) || 0;
-      state.spins = Number(d.spins ?? d.Spins) || 0;
+      state.spins = Number(d.spins ?? d.Spins) || 0; // доступные прокрутки из таблицы
       saveLocal();
       return true;
     }
@@ -38,78 +38,44 @@ async function fetchUserFromAPI(id){
   return false;
 }
 
-/* ===== Универсальное обновление таблицы ===== */
+/* ===== Обновление таблицы (дельты с резервом) ===== */
 async function updateUserOnAPI({ addScore=0, useSpins=0 } = {}) {
   const id  = state.id;
   const inc = Number(addScore) || 0;
   const dec = Math.abs(Number(useSpins) || 0);
 
-  // 1) попробуем сразу дельтами (разные варианты ключа и метода)
-  const attempts = [
-    {kind:'GET',  params:{action:'update', id, addScore:inc, addSpins:-dec}},
-    {kind:'GET',  params:{action:'update', ID:id, addScore:inc, addSpins:-dec}},
-    {kind:'FORM', params:{action:'update', id, addScore:inc, addSpins:-dec}},
-    {kind:'FORM', params:{action:'update', ID:id, addScore:inc, addSpins:-dec}},
-  ];
-
-  // 2) если дельты не принялись — считаем абсолюты и шлём их
-  try {
-    const r = await fetch(`${API}?id=${encodeURIComponent(id)}&t=${Date.now()}`, {cache:'no-store'});
-    const j = await r.json();
-    if (j?.ok) {
-      const d = j.data || {};
-      const curScore = Number(d.score ?? d.Score ?? 0);
-      const curSpins = Number(d.spins ?? d.Spins ?? 0);
-      const newScore = curScore + inc;
-      const newSpins = Math.max(0, curSpins - dec);
-
-      attempts.push(
-        {kind:'FORM', params:{action:'set', id,  score:newScore, spins:newSpins}},
-        {kind:'FORM', params:{action:'set', ID:id, Score:newScore, Spins:newSpins}},
-        {kind:'JSON', params:{action:'set', id,  score:newScore, spins:newSpins}},
-        {kind:'JSON', params:{action:'set', ID:id, Score:newScore, Spins:newSpins}},
-      );
-    }
-  } catch {}
-
-  for (const att of attempts) {
-    try {
-      if (att.kind === 'GET') {
-        const qs = new URLSearchParams({...att.params, t:Date.now()});
-        const r = await fetch(`${API}?${qs}`, {cache:'no-store'});
-        if (r.ok) return true;
-      } else if (att.kind === 'FORM') {
-        const body = new URLSearchParams(att.params).toString();
-        const r = await fetch(API, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body});
-        if (r.ok) return true;
-      } else {
-        const r = await fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(att.params)});
-        if (r.ok) return true;
-      }
-    } catch {}
-  }
-  console.warn('API update failed');
-  return false;
-}
-
-
+  // 1) дельтами
+  const deltaParams = { action:'update', id, addScore:inc, addSpins:-dec };
   try{
+    const qs = new URLSearchParams({...deltaParams, t:Date.now()}).toString();
     const r1 = await fetch(`${API}?${qs}`, {cache:'no-store'});
     if (r1.ok){ try{ const j=await r1.json(); if (j?.ok || j?.result==='ok') return true; }catch{ return true; } }
   }catch{}
 
   try{
-    const r2 = await fetch(API, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:qs.toString()});
+    const body = new URLSearchParams(deltaParams).toString();
+    const r2 = await fetch(API, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body});
     if (r2.ok) return true;
   }catch{}
 
+  // 2) абсолютами (прочитать -> записать)
   try{
-    const r3 = await fetch(API, {method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({action:'update', id, addScore:inc, addSpins:-dec, scoreDelta:inc, spinsDelta:-dec})});
-    if (r3.ok) return true;
+    const r = await fetch(`${API}?id=${encodeURIComponent(id)}&t=${Date.now()}`, {cache:'no-store'});
+    const j = await r.json();
+    if (j?.ok) {
+      const d = j.data || {};
+      const newScore = Number(d.score ?? d.Score ?? 0) + inc;
+      const newSpins = Math.max(0, Number(d.spins ?? d.Spins ?? 0) - dec);
+
+      const setParams = { action:'set', id, score:newScore, spins:newSpins };
+      const body = new URLSearchParams(setParams).toString();
+      const rSet = await fetch(API, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body});
+      if (rSet.ok) return true;
+    }
   }catch{}
 
-  console.warn('API update failed'); return false;
+  console.warn('API update failed');
+  return false;
 }
 
 /* ===== UI ===== */
@@ -117,6 +83,14 @@ const spinBtn = document.getElementById('spinBtn');
 const wheel   = document.getElementById('wheelBody');
 const uiSpins = document.getElementById('spinsLeft');
 const uiScore = document.getElementById('userScore');
+
+function renderUI(){
+  uiSpins.textContent = state.spins;
+  uiScore.textContent = state.score;
+  const ok = canSpin();
+  spinBtn.style.pointerEvents = ok ? 'auto' : 'none';
+  spinBtn.style.opacity = ok ? '1' : '.45';
+}
 
 /* ===== Дневной лимит 3 спина / 24 часа ===== */
 const DAY = 24*60*60*1000;
@@ -145,7 +119,7 @@ function scheduleResetTimer(){
 }
 
 /* ===== Сессия колеса ===== */
-const SLICE_VALUES = [0,1,3,4,5,6,10,12];
+const SLICE_VALUES = [0,1,3,4,5,6,10,12]; // по часовой
 const N = SLICE_VALUES.length;
 const SLICE_ANGLE = 360 / N;
 const BASE_WEIGHTS = {0:.3,1:.6,3:1.0,4:1.2,5:1.4,6:1.2,10:.6,12:.4};
@@ -162,20 +136,13 @@ function resetSession(){ session = { angle: session.angle||0, spins:0, total:0, 
 function canSpin(){
   return !spinning && state.spins > 0 && daily.used < 3 && session.total < 20;
 }
-function renderUI(){
-  uiSpins.textContent = state.spins;
-  uiScore.textContent = state.score;
-  const ok = canSpin();
-  spinBtn.style.pointerEvents = ok ? 'auto' : 'none';
-  spinBtn.style.opacity = ok ? '1' : '.45';
-}
 
 /* ===== Выбор значения ===== */
 function chooseValue(){
   const left = 3 - session.spins;
   const cap  = 20 - session.total;
   let allowed = SLICE_VALUES.filter(v => v <= cap);
-  if (left === 1 && session.total === 0) allowed = allowed.filter(v => v > 0);
+  if (left === 1 && session.total === 0) allowed = allowed.filter(v => v > 0); // итог не 0
   if (!allowed.length) return 1;
   const w = allowed.map(v => BASE_WEIGHTS[v] ?? .1);
   const s = w.reduce((a,b)=>a+b,0)||1; let r = Math.random()*s;
@@ -222,26 +189,30 @@ function trySpin(){
   wheel.addEventListener('transitionend', async function onEnd(){
     wheel.removeEventListener('transitionend', onEnd);
 
+    // фиксация угла без обратного прокрута
     session.angle = norm(target);
     wheel.classList.add('no-anim');
     wheel.style.setProperty('--rot', session.angle+'deg');
     void wheel.offsetHeight;
     wheel.classList.remove('no-anim');
 
+    // лимиты
     session.spins += 1;
     session.total += value;
     if (session.spins >= 3 || session.total >= 20) session.done = true;
 
     daily.used += 1; saveDaily(); if (daily.used >= 3) scheduleResetTimer();
 
+    // локально
     state.score = Number(state.score||0) + Number(value||0);
     state.spins = Math.max(0, Number(state.spins||0) - 1);
 
     saveLocal(); persistSession(); renderUI();
 
+    // сервер
     try{
       await updateUserOnAPI({ addScore:value, useSpins:1 });
-      await fetchUserFromAPI(state.id); // подтянуть актуальные Score/Spins
+      await fetchUserFromAPI(state.id); // подтянуть свежие Score/Spins
       renderUI();
     }catch(e){ console.warn(e); }
 
@@ -250,7 +221,7 @@ function trySpin(){
   }, {once:true});
 }
 
-/* ===== Навигация нижнего меню ===== */
+/* ===== Нижнее меню ===== */
 document.querySelectorAll('#bottomNav .tab').forEach(tab=>{
   tab.addEventListener('click', ()=>{
     const id = state.id || getClientId();
@@ -265,7 +236,7 @@ document.querySelectorAll('#bottomNav .tab').forEach(tab=>{
 (async () => {
   const id = getClientId();
   loadLocal(id);
-  await fetchUserFromAPI(id);
+  await fetchUserFromAPI(id);    // подтянуть score и доступные Spins
   loadSession();
   loadDaily();
   renderUI();
