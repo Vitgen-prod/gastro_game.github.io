@@ -6,6 +6,12 @@ const overlay     = document.getElementById('introOverlay');
 const mapScreen   = document.getElementById('mapScreen');
 const shopScreen  = document.getElementById('shopScreen'); // НОВОЕ
 
+document.addEventListener('DOMContentLoaded', () => {
+  // всегда стартовый экран при входе по ссылке
+  startScreen.classList.remove('hidden');
+  cabinet.classList.add('hidden');
+});
+
 /* ===== Конфиг API ===== */
 const API = 'https://script.google.com/macros/s/AKfycbzk_bfXNQ3aRDQQ6v6qVRSfdf3iUha3qnpwxGzLnTwJVwMsmlfuUv5kgGJwV-yK7nzmmA/exec';
 
@@ -183,7 +189,8 @@ document.querySelectorAll('#bottomNav .tab').forEach(tab => {
     const id = state.id || getClientId();
     const t = tab.dataset.tab;
     if (t === 'casino') {
-     location.href = `casino.html?id=${encodeURIComponent(cid)}`;
+      // БЫЛО: cid — несуществующая переменная
+      location.href = `casino.html?id=${encodeURIComponent(id)}`;
       return;
     }
     if (t === 'shop') showScreen('shop'); else showScreen('map');
