@@ -7,24 +7,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=6" />
   <style>
-    html,body{height:100%;overflow:hidden}
-    .casino-root{position:fixed;inset:0;display:flex;flex-direction:column;background:url('фон2.png') center/cover no-repeat}
-    .casino-head{padding-top:calc(env(safe-area-inset-top) + 8px);display:flex;justify-content:center}
-    .casino-head img{height:64px;width:auto}
-    .casino-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:8px 12px 96px}
-    .wheel{position:relative;max-width:360px;width:90%}
-    .wheel__ticker{position:absolute;left:50%;top:-6px;transform:translateX(-50%);z-index:3;width:64px}
-    .wheel__ticker img{width:100%;height:auto}
-    .wheel__body{--rot:0deg;position:relative;z-index:2;transform:rotate(var(--rot));transition:transform 7s cubic-bezier(.1,0,0,1)}
-    .no-anim .wheel__body{transition:none !important}
-    .wheel__body img{display:block;width:100%;height:auto}
-    .spin-img{display:block;width:342px;max-width:90%;height:auto;cursor:pointer;user-select:none;-webkit-user-drag:none;touch-action:manipulation}
-    .spin-img:active{transform:scale(.98);filter:brightness(.94)}
-    .info{font:600 14px/1.3 Inter,system-ui;color:#484F4C;text-align:center;display:flex;gap:14px}
-    .info b{font-weight:800}
-    /* нижнее меню уже есть в вашем style.css; просто держим над всем */
-    .bottom-card{z-index:60}
-  </style>
+  html,body{height:100%;overflow:hidden}
+  .casino-root{position:fixed;inset:0;display:flex;flex-direction:column;background:url('фон2.png') center/cover no-repeat}
+  .casino-head{padding-top:calc(env(safe-area-inset-top) + 8px);display:flex;justify-content:center}
+  .casino-head img{height:64px;width:auto}
+  .casino-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:8px 12px 96px}
+  .wheel{position:relative;max-width:360px;width:90%}
+  .wheel__ticker{position:absolute;left:50%;top:-6px;transform:translateX(-50%);z-index:3;width:64px}
+  .wheel__ticker img{width:100%;height:auto}
+  .wheel__body{--rot:0deg;position:relative;z-index:2;transform:rotate(var(--rot));transition:transform 7s cubic-bezier(.1,0,0,1)}
+  /* ВАЖНО: отключение transition на самом элементе, чтобы не было обратного прокрута */
+  .wheel__body.no-anim{transition:none !important}
+  .wheel__body img{display:block;width:100%;height:auto}
+  .spin-img{display:block;width:342px;max-width:90%;height:auto;cursor:pointer;user-select:none;-webkit-user-drag:none;touch-action:manipulation}
+  .spin-img:active{transform:scale(.98);filter:brightness(.94)}
+  .info{font:600 14px/1.3 Inter,system-ui;color:#484F4C;text-align:center;display:flex;gap:14px}
+  .info b{font-weight:800}
+  .bottom-card{z-index:60}
+</style>
+
 </head>
 <body>
   <div class="casino-root">
