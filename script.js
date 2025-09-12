@@ -177,11 +177,20 @@ document.getElementById('openLevel')?.addEventListener('click', () => {
 });
 
 /* Нижнее меню — переключение экранов */
+/* Нижнее меню — переключение экранов + казино */
 document.querySelectorAll('#bottomNav .tab').forEach(tab => {
   tab.addEventListener('click', () => {
     const id = tab.dataset.tab;
+
+    if (id === 'casino') {
+      // новая вкладка с передачей id
+      const cid = state.id || getClientId();
+      window.open(`casino.html?id=${encodeURIComponent(cid)}`, '_blank');
+      return;
+    }
+
     if (id === 'shop') showScreen('shop');
-    else showScreen('map'); // остальные возвращают на карту
+    else showScreen('map');
     console.log('TAB', id);
   });
 });
