@@ -180,18 +180,13 @@ document.getElementById('openLevel')?.addEventListener('click', () => {
 /* Нижнее меню — переключение экранов + казино */
 document.querySelectorAll('#bottomNav .tab').forEach(tab => {
   tab.addEventListener('click', () => {
-    const id = tab.dataset.tab;
-
-    if (id === 'casino') {
-      // новая вкладка с передачей id
-      const cid = state.id || getClientId();
-      location.href = `casino.html?id=${encodeURIComponent(cid)}`;
+    const id = state.id || getClientId();
+    const t = tab.dataset.tab;
+    if (t === 'casino') {
+     location.href = `casino.html?id=${encodeURIComponent(cid)}`;
       return;
     }
-
-    if (id === 'shop') showScreen('shop');
-    else showScreen('map');
-    console.log('TAB', id);
+    if (t === 'shop') showScreen('shop'); else showScreen('map');
   });
 });
 
