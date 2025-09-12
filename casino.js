@@ -44,12 +44,54 @@ async function updateUserOnAPI({ addScore=0, useSpins=0 } = {}) {
   const inc = Number(addScore) || 0;
   const dec = Math.abs(Number(useSpins) || 0);
 
-  const qs = new URLSearchParams({
-    action:'update', id,
-    addScore:inc, addSpins:-dec,
-    scoreDelta:inc, spinsDelta:-dec,
-    t: Date.now()
-  });
+  // 1) попробуем сразу дельтами (разные варианты ключа и метода)
+  const attempts = [
+    {kind:'GET',  params:{action:'update', id, addScore:inc, addSpins:-dec}},
+    {kind:'GET',  params:{action:'update', ID:id, addScore:inc, addSpins:-dec}},
+    {kind:'FORM', params:{action:'update', id, addScore:inc, addSpins:-dec}},
+    {kind:'FORM', params:{action:'update', ID:id, addScore:inc, addSpins:-dec}},
+  ];
+
+  // 2) если дельты не принялись — считаем абсолюты и шлём их
+  try {
+    const r = await fetch(`${API}?id=${encodeURIComponent(id)}&t=${Date.now()}`, {cache:'no-store'});
+    const j = await r.json();
+    if (j?.ok) {
+      const d = j.data || {};
+      const curScore = Number(d.score ?? d.Score ?? 0);
+      const curSpins = Number(d.spins ?? d.Spins ?? 0);
+      const newScore = curScore + inc;
+      const newSpins = Math.max(0, curSpins - dec);
+
+      attempts.push(
+        {kind:'FORM', params:{action:'set', id,  score:newScore, spins:newSpins}},
+        {kind:'FORM', params:{action:'set', ID:id, Score:newScore, Spins:newSpins}},
+        {kind:'JSON', params:{action:'set', id,  score:newScore, spins:newSpins}},
+        {kind:'JSON', params:{action:'set', ID:id, Score:newScore, Spins:newSpins}},
+      );
+    }
+  } catch {}
+
+  for (const att of attempts) {
+    try {
+      if (att.kind === 'GET') {
+        const qs = new URLSearchParams({...att.params, t:Date.now()});
+        const r = await fetch(`${API}?${qs}`, {cache:'no-store'});
+        if (r.ok) return true;
+      } else if (att.kind === 'FORM') {
+        const body = new URLSearchParams(att.params).toString();
+        const r = await fetch(API, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body});
+        if (r.ok) return true;
+      } else {
+        const r = await fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(att.params)});
+        if (r.ok) return true;
+      }
+    } catch {}
+  }
+  console.warn('API update failed');
+  return false;
+}
+
 
   try{
     const r1 = await fetch(`${API}?${qs}`, {cache:'no-store'});
