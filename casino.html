@@ -3,86 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>Gastro Nomads — Казино</title>
+  <title>Казино</title>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=6" />
   <style>
-    /* Центрируем колесо и сохраняем ваше меню/карточки */
-    .casino-wrap{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:220px 12px 120px;background:url('фон2.png') center/cover no-repeat}
-    .wheel{position:relative;max-width:360px;margin:0 auto}
+    html,body{height:100%;overflow:hidden}
+    .casino-root{position:fixed;inset:0;display:flex;flex-direction:column;background:url('фон2.png') center/cover no-repeat}
+    .casino-head{padding-top:calc(env(safe-area-inset-top) + 8px);display:flex;justify-content:center}
+    .casino-head img{height:64px;width:auto}
+    .casino-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:8px 12px 96px}
+    .wheel{position:relative;max-width:360px;width:90%}
     .wheel__ticker{position:absolute;left:50%;top:-6px;transform:translateX(-50%);z-index:3;width:64px}
     .wheel__ticker img{width:100%;height:auto}
     .wheel__body{--rot:0deg;position:relative;z-index:2;transform:rotate(var(--rot));transition:transform 7s cubic-bezier(.1,0,0,1)}
+    .no-anim .wheel__body{transition:none !important}
     .wheel__body img{display:block;width:100%;height:auto}
-    .wheel__btn{margin:18px auto 8px;display:block;width:100%;max-width:340px;height:56px;border:0;border-radius:14px;background:#3a3f3f;color:#fff;font:700 16px/1 Manrope,system-ui;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.18)}
-    .wheel__btn:disabled{opacity:.45;cursor:not-allowed}
-    .wheel__info{margin:8px auto 0;max-width:340px;font:600 14px/1.4 Inter,system-ui;color:#484F4C;text-align:center;display:grid;gap:6px}
-    .casino-title{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:50%;transform:translateX(-50%);z-index:70;font:700 18px/1 Inter;color:#484F4C;background:#fff;border-radius:999px;padding:8px 14px;box-shadow:0 2px 18px rgba(0,0,0,.10)}
-    /* чтобы не пряталось под фикс-статусом */
-    .status-card{z-index:80}
+    .spin-img{display:block;width:342px;max-width:90%;height:auto;cursor:pointer;user-select:none;-webkit-user-drag:none;touch-action:manipulation}
+    .spin-img:active{transform:scale(.98);filter:brightness(.94)}
+    .info{font:600 14px/1.3 Inter,system-ui;color:#484F4C;text-align:center;display:flex;gap:14px}
+    .info b{font-weight:800}
+    /* нижнее меню уже есть в вашем style.css; просто держим над всем */
+    .bottom-card{z-index:60}
   </style>
 </head>
 <body>
+  <div class="casino-root">
+    <header class="casino-head">
+      <img src="casinoopen.png" alt="Добро пожаловать в казино">
+    </header>
 
-  <!-- Карточка статуса (та же, что у вас) -->
-  <div class="status-card">
-    <div class="status-row">
-      <div class="chip gray">Вы</div>
-      <div class="chip pink"><span data-bind="level">1</span> уровень</div>
-      <div class="chip green"><span data-bind="score">0</span> Nom</div>
-    </div>
-    <div class="progress-line">
-      <span class="progress-title">До нового уровня</span>
-      <div class="progress-rail">
-        <div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div>
+    <main class="casino-main">
+      <section class="wheel" aria-live="polite">
+        <div class="wheel__ticker"><img src="ticker.png" alt=""></div>
+        <!-- порядок секторов по часовой, начиная с верхнего -->
+        <div id="wheelWrap">
+          <div class="wheel__body" id="wheelBody"><img src="wheel.png" alt=""></div>
+        </div>
+      </section>
+
+      <!-- кнопка-картинка -->
+      <img src="spinbutton.png" alt="Крутить" id="spinBtn" class="spin-img" role="button" tabindex="0">
+
+      <div class="info">
+        <span>Прокруток: <b id="spinsLeft">0</b></span>
+        <span>Nom: <b id="userScore">0</b></span>
       </div>
-    </div>
+    </main>
+
+    <!-- Нижнее меню без изменений -->
+    <nav class="bottom-card" id="bottomNav">
+      <button class="tab" data-tab="casino">
+        <img src="casino.png" alt="" class="icon" /><span>Казино</span>
+      </button>
+      <i class="divider"></i>
+      <button class="tab" data-tab="tasks">
+        <img src="tasks.png" alt="" class="icon" /><span>Моё Шато</span>
+      </button>
+      <i class="divider"></i>
+      <button class="tab" data-tab="shop">
+        <img src="shop.png" alt="" class="icon" /><span>Магазин</span>
+      </button>
+      <i class="divider"></i>
+      <button class="tab" data-tab="friends">
+        <img src="friends.png" alt="" class="icon" /><span>Друзья</span>
+      </button>
+    </nav>
   </div>
-
-  <div class="casino-title">Казино</div>
-
-  <!-- Контент казино -->
-  <main class="casino-wrap">
-    <section class="wheel" aria-live="polite">
-      <div class="wheel__ticker"><img src="ticker.png" alt=""></div>
-
-      <!-- ВАЖНО: порядок секторов по часовой стрелке, начиная с верхнего под указателем -->
-      <div class="wheel__body" id="wheelBody">
-        <img src="wheel.png" alt="">
-      </div>
-
-      <button class="wheel__btn" id="spinBtn">КРУТИТЬ</button>
-      <div class="wheel__info">
-        <div>Осталось прокруток: <span id="spinsLeft">3</span>/3</div>
-        <div>Сумма за сессию: <span id="totalPoints">0</span> / 20</div>
-        <div>Выпало: <span id="lastDrop">—</span></div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Нижнее меню — то же самое -->
-  <nav class="bottom-card" id="bottomNav">
-    <button class="tab" data-tab="casino">
-      <img src="casino.png" alt="" class="icon" />
-      <span>Казино</span>
-    </button>
-    <i class="divider"></i>
-    <button class="tab" data-tab="tasks">
-      <img src="tasks.png" alt="" class="icon" />
-      <span>Моё Шато</span>
-    </button>
-    <i class="divider"></i>
-    <button class="tab" data-tab="shop">
-      <img src="shop.png" alt="" class="icon" />
-      <span>Магазин</span>
-    </button>
-    <i class="divider"></i>
-    <button class="tab" data-tab="friends">
-      <img src="friends.png" alt="" class="icon" />
-      <span>Друзья</span>
-    </button>
-  </nav>
-
   <script src="casino.js"></script>
 </body>
 </html>
