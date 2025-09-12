@@ -30,20 +30,44 @@ async function fetchUserFromAPI(id){
       state.id=id;
       state.level = Number(d.level ?? d.Level) || 1;
       state.score = Number(d.score ?? d.Score) || 0;
-      state.spins = Number(d.spins ?? d.Spins) || 0; // доступные прокрутки из таблицы
+      state.spins = Number(d.spins ?? d.Spins) || 0;
       saveLocal();
       return true;
     }
   }catch(e){ console.warn('API read fail', e); }
   return false;
 }
-async function updateUserOnAPI({addScore=0, useSpins=0}={}){
+
+/* ===== Универсальное обновление таблицы ===== */
+async function updateUserOnAPI({ addScore=0, useSpins=0 } = {}) {
+  const id  = state.id;
+  const inc = Number(addScore) || 0;
+  const dec = Math.abs(Number(useSpins) || 0);
+
+  const qs = new URLSearchParams({
+    action:'update', id,
+    addScore:inc, addSpins:-dec,
+    scoreDelta:inc, spinsDelta:-dec,
+    t: Date.now()
+  });
+
   try{
-    await fetch(API,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({action:'update',id:state.id,addScore:Number(addScore)||0,addSpins:-Math.abs(Number(useSpins)||0)})
-    });
-  }catch(e){ console.warn('API write fail', e); }
+    const r1 = await fetch(`${API}?${qs}`, {cache:'no-store'});
+    if (r1.ok){ try{ const j=await r1.json(); if (j?.ok || j?.result==='ok') return true; }catch{ return true; } }
+  }catch{}
+
+  try{
+    const r2 = await fetch(API, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:qs.toString()});
+    if (r2.ok) return true;
+  }catch{}
+
+  try{
+    const r3 = await fetch(API, {method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'update', id, addScore:inc, addSpins:-dec, scoreDelta:inc, spinsDelta:-dec})});
+    if (r3.ok) return true;
+  }catch{}
+
+  console.warn('API update failed'); return false;
 }
 
 /* ===== UI ===== */
@@ -52,7 +76,7 @@ const wheel   = document.getElementById('wheelBody');
 const uiSpins = document.getElementById('spinsLeft');
 const uiScore = document.getElementById('userScore');
 
-/* ===== Дневной лимит 3 спина за 24 часа ===== */
+/* ===== Дневной лимит 3 спина / 24 часа ===== */
 const DAY = 24*60*60*1000;
 const dailyKey = id => `casino_daily_v1_${id}`;
 let daily = { startedAt:0, used:0 };
@@ -67,7 +91,7 @@ function resetDailyIfNeeded(){
   if (!daily.startedAt || Date.now() - daily.startedAt >= DAY){
     daily.startedAt = Date.now();
     daily.used = 0;
-    resetSession(); // новая сессия номов и 3 попытки
+    resetSession();
     saveDaily(); persistSession();
   }
   scheduleResetTimer();
@@ -78,7 +102,7 @@ function scheduleResetTimer(){
   if (wait>0) resetTimer = setTimeout(()=>{ resetDailyIfNeeded(); renderUI(); }, wait + 250);
 }
 
-/* ===== Сессия колеса: максимум 3 спина, сумма ≤ 20 ===== */
+/* ===== Сессия колеса ===== */
 const SLICE_VALUES = [0,1,3,4,5,6,10,12];
 const N = SLICE_VALUES.length;
 const SLICE_ANGLE = 360 / N;
@@ -91,15 +115,10 @@ function loadSession(){
   try{ session = {...session, ...(JSON.parse(localStorage.getItem(sessionKey(state.id))||'{}'))}; }catch{}
   wheel.style.setProperty('--rot', (session.angle||0)+'deg');
 }
-function resetSession(){
-  session = { angle: session.angle||0, spins:0, total:0, done:false };
-}
+function resetSession(){ session = { angle: session.angle||0, spins:0, total:0, done:false }; }
 
 function canSpin(){
-  return !spinning
-      && state.spins > 0           // есть вращения в таблице
-      && daily.used < 3            // дневной лимит
-      && session.total < 20        // ограничение по сумме за сессию
+  return !spinning && state.spins > 0 && daily.used < 3 && session.total < 20;
 }
 function renderUI(){
   uiSpins.textContent = state.spins;
@@ -109,23 +128,20 @@ function renderUI(){
   spinBtn.style.opacity = ok ? '1' : '.45';
 }
 
-/* ===== Выбор значения с учётом лимитов ===== */
+/* ===== Выбор значения ===== */
 function chooseValue(){
   const left = 3 - session.spins;
   const cap  = 20 - session.total;
   let allowed = SLICE_VALUES.filter(v => v <= cap);
-  if (left === 1 && session.total === 0) allowed = allowed.filter(v => v > 0); // итог не 0
+  if (left === 1 && session.total === 0) allowed = allowed.filter(v => v > 0);
   if (!allowed.length) return 1;
   const w = allowed.map(v => BASE_WEIGHTS[v] ?? .1);
-  return weighted(allowed, w);
-}
-function weighted(vals, ws){
-  const s = ws.reduce((a,b)=>a+b,0)||1; let r = Math.random()*s;
-  for (let i=0;i<vals.length;i++){ r -= ws[i]; if (r<=0) return vals[i]; }
-  return vals[vals.length-1];
+  const s = w.reduce((a,b)=>a+b,0)||1; let r = Math.random()*s;
+  for (let i=0;i<allowed.length;i++){ r -= w[i]; if (r<=0) return allowed[i]; }
+  return allowed[allowed.length-1];
 }
 
-/* ===== Геометрия поворота ===== */
+/* ===== Геометрия ===== */
 function getRotationDeg(el){
   const tr = getComputedStyle(el).transform;
   if (!tr || tr==='none') return 0;
@@ -164,77 +180,32 @@ function trySpin(){
   wheel.addEventListener('transitionend', async function onEnd(){
     wheel.removeEventListener('transitionend', onEnd);
 
-    // фиксируем конечный угол без animations, чтобы НЕ было обратного проворота
     session.angle = norm(target);
-    wheel.classList.add('no-anim');                 // <— класс на самом элементе .wheel__body
+    wheel.classList.add('no-anim');
     wheel.style.setProperty('--rot', session.angle+'deg');
-    void wheel.offsetHeight;                         // reflow
+    void wheel.offsetHeight;
     wheel.classList.remove('no-anim');
 
-    // применяем результат и лимиты
     session.spins += 1;
     session.total += value;
     if (session.spins >= 3 || session.total >= 20) session.done = true;
 
-    daily.used += 1; saveDaily();                    // дневной счётчик
-    if (daily.used >= 3) scheduleResetTimer();
+    daily.used += 1; saveDaily(); if (daily.used >= 3) scheduleResetTimer();
 
     state.score = Number(state.score||0) + Number(value||0);
     state.spins = Math.max(0, Number(state.spins||0) - 1);
 
     saveLocal(); persistSession(); renderUI();
 
-    // запись в таблицу: score += value, Spins -= 1
-    async function updateUserOnAPI({ addScore=0, useSpins=0 } = {}) {
-  const id   = state.id;
-  const inc  = Number(addScore) || 0;
-  const dec  = Math.abs(Number(useSpins) || 0);
+    try{
+      await updateUserOnAPI({ addScore:value, useSpins:1 });
+      await fetchUserFromAPI(state.id); // подтянуть актуальные Score/Spins
+      renderUI();
+    }catch(e){ console.warn(e); }
 
-  const qs = new URLSearchParams({
-    action: 'update',
-    id,
-    addScore: inc,          // вариант 1
-    addSpins: -dec,
-    scoreDelta: inc,        // вариант 2 (на случай иных имён)
-    spinsDelta: -dec,
-    t: Date.now()
-  });
-
-  // 1) пробуем GET (часто именно так сделан doGet в Apps Script)
-  try {
-    const r = await fetch(`${API}?${qs.toString()}`, { cache: 'no-store' });
-    if (r.ok) {
-      try { const j = await r.json(); if (j && (j.ok || j.result === 'ok')) return true; } catch { return true; }
-    }
-  } catch {}
-
-  // 2) пробуем POST form-urlencoded (часто так устроен doPost)
-  try {
-    const r = await fetch(API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: qs.toString()
-    });
-    if (r.ok) return true;
-  } catch {}
-
-  // 3) запасной вариант — JSON
-  try {
-    const r = await fetch(API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'update', id,
-        addScore: inc, addSpins: -dec,
-        scoreDelta: inc, spinsDelta: -dec
-      })
-    });
-    if (r.ok) return true;
-  } catch {}
-
-  console.warn('API update failed');
-  return false;
-}
+    spinning = false;
+    renderUI();
+  }, {once:true});
 }
 
 /* ===== Навигация нижнего меню ===== */
@@ -252,8 +223,8 @@ document.querySelectorAll('#bottomNav .tab').forEach(tab=>{
 (async () => {
   const id = getClientId();
   loadLocal(id);
-  await fetchUserFromAPI(id);    // score и доступные Spins
+  await fetchUserFromAPI(id);
   loadSession();
-  loadDaily();                   // дневной лимит + авто-разлок
+  loadDaily();
   renderUI();
 })();
