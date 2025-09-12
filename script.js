@@ -185,7 +185,7 @@ document.querySelectorAll('#bottomNav .tab').forEach(tab => {
     if (id === 'casino') {
       // новая вкладка с передачей id
       const cid = state.id || getClientId();
-      window.open(`casino.html?id=${encodeURIComponent(cid)}`, '_blank');
+      location.href = `casino.html?id=${encodeURIComponent(cid)}`;
       return;
     }
 
