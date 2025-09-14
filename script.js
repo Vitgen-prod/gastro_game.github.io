@@ -7,7 +7,8 @@ const mapScreen   = document.getElementById('mapScreen');
 const shopScreen  = document.getElementById('shopScreen');
 
 /* ===== API ===== */
-const API = 'https://script.google.com/macros/s/AKfycbzk_bfXNQ3aRDQQ6v6qVRSfdf3iUha3qnpwxGzLnTwJVwMsmlfuUv5kgGJwV-yK7nzmmA/exec';
+const API = 'https://script.google.com/macros/s/AKfycby_rPc5W8Ob_73C7EAu6QM0W0WWMeQPpIzk8G8e_TkWca44h51kiHs8CgoOf891Y87Psg/exec';
+
 
 /* ===== Состояние ===== */
 const state = { id:null, level:1, score:0, purchases:0 };
