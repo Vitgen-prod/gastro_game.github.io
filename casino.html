@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=6" />
   <style>
+    .hidden{display:none!important}
     html,body{height:100%;overflow:hidden}
     .casino-root{position:fixed;inset:0;display:flex;flex-direction:column;background:url('фон2.png') center/cover no-repeat}
     .casino-head{padding-top:calc(env(safe-area-inset-top) + 8px);display:flex;justify-content:center}
@@ -23,6 +24,25 @@
     .info{font:600 14px/1.3 Inter,system-ui;color:#484F4C;text-align:center;display:flex;gap:14px}
     .info b{font-weight:800}
     .bottom-card{z-index:60}
+
+    /* ===== POPUP: нет попыток ===== */
+    .ref-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:18px;z-index:1000}
+    .ref-popup{position:relative;width:100%;max-width:420px;background:#2F3432;border-radius:24px;box-shadow:0 24px 60px rgba(0,0,0,.45);color:#fff;padding:16px 16px 18px}
+    .ref-close{position:absolute;top:10px;right:10px;background:transparent;border:0;padding:6px;cursor:pointer}
+    .ref-close img{width:22px;height:22px;display:block}
+    .ref-bubble{background:#fff;color:#2F3432;border-radius:18px;padding:12px 14px 12px;font:700 16px/1.3 Manrope,Inter,system-ui;text-align:left;margin:4px 8px 10px}
+    .ref-card{background:#3A3F3D;border-radius:18px;padding:14px;margin:0 2px 8px}
+    .ref-line{height:2px;background:#6A6F6D;opacity:.35;border-radius:99px;margin:10px 0}
+    .ref-title{color:#FFBBCD;font:700 16px/1.25 Manrope;margin:2px 0 8px}
+    .ref-p{font:600 14px/1.45 Inter,system-ui;margin:8px 0}
+    .ref-p b{color:#FFBBCD}
+    .ref-linkbox{display:flex;align-items:center;gap:10px;margin:8px 0}
+    .ref-input{flex:1;min-width:0;background:#2F3432;border:1.5px solid #6A6F6D;border-radius:10px;color:#fff;font:600 14px/1.2 Inter;padding:10px 12px;overflow:hidden;text-overflow:ellipsis}
+    .ref-copy{flex:none;width:42px;height:42px;border:0;background:transparent;padding:0;cursor:pointer}
+    .ref-copy img{width:100%;height:100%;display:block}
+    .ref-copy:active{transform:scale(.96);filter:brightness(.92)}
+    .ref-toast{position:absolute;right:56px;top:14px;background:#79A57B;color:#fff;border-radius:12px;padding:6px 10px;font:700 12px/1 Manrope;opacity:0;transform:translateY(-6px);transition:.25s}
+    .ref-toast.on{opacity:1;transform:none}
   </style>
 </head>
 <body>
@@ -47,7 +67,6 @@
       </div>
     </main>
 
-    <!-- Нижнее меню -->
     <nav class="bottom-card" id="bottomNav">
       <button class="tab" data-tab="casino"><img src="casino.png" alt="" class="icon" /><span>Казино</span></button>
       <i class="divider"></i>
@@ -58,6 +77,37 @@
       <button class="tab" data-tab="friends"><img src="friends.png" alt="" class="icon" /><span>Друзья</span></button>
     </nav>
   </div>
+
+  <!-- POPUP -->
+  <div id="noSpinsOverlay" class="ref-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="refTitle">
+    <div class="ref-popup">
+      <button class="ref-close" id="refClose" aria-label="Закрыть"><img src="ref-close.png" alt=""></button>
+      <div class="ref-toast" id="refToast">Скопировано</div>
+
+      <div class="ref-bubble" id="refTitle">Упс, кажется у вас больше нет попыток</div>
+
+      <div class="ref-card">
+        <div class="ref-p">Следующие прокрутки будут автоматически начислены вам при оплате нового месяца.</div>
+        <div class="ref-line"></div>
+
+        <div class="ref-title">Хотите получить ещё 6 прокруток прямо сейчас?</div>
+        <div class="ref-p">Пригласите друга и крутите колесо ещё 6 раз! Разделите удачу с друзьями!</div>
+        <div class="ref-p">Ваша персональная реферальная ссылка, чтобы пригласить близких в наш клуб:</div>
+
+        <div class="ref-linkbox">
+          <input id="refLink" class="ref-input" type="text" readonly value="">
+          <button id="refCopy" class="ref-copy" aria-label="Скопировать ссылку"><img src="ref-copy.png" alt=""></button>
+        </div>
+
+        <div class="ref-line"></div>
+        <div class="ref-title">Когда ваш друг присоединится:</div>
+        <div class="ref-p"><b>Вы получите:</b> 6 дополнительных прокруток в казино, увеличивая свои шансы на крупный выигрыш!</div>
+        <div class="ref-p"><b>Ваш друг получит:</b> 3 стартовые + 6 бонусных прокруток, итого 9 шансов на яркий старт!</div>
+        <div class="ref-p">Приглашайте и играйте, и открывайте новые вкусы вместе!</div>
+      </div>
+    </div>
+  </div>
+
   <script src="casino.js"></script>
 </body>
 </html>
