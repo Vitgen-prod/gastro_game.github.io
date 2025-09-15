@@ -277,3 +277,4 @@ document.querySelectorAll('#bottomNav .tab').forEach(tab=>{
   loadDaily();
   renderUI();
 })();
+
