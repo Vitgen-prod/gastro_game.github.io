@@ -30,7 +30,7 @@ async function fetchUserFromAPI(id){
       state.id=id;
       state.level = Number(d.level ?? d.Level) || 1;
       state.score = Number(d.score ?? d.Score) || 0;
-      state.spins = Number(d.spins ?? d.Spins) || 0; // доступные прокрутки из таблицы
+      state.spins = Number(d.spins ?? d.Spins) || 0;
       saveLocal();
       return true;
     }
@@ -38,42 +38,47 @@ async function fetchUserFromAPI(id){
   return false;
 }
 
-/* ===== Обновление таблицы (дельты с резервом) ===== */
+/* ===== Обновление таблицы ===== */
 async function updateUserOnAPI({ addScore=0, useSpins=0 } = {}) {
   const id  = state.id;
   const inc = Number(addScore) || 0;
   const dec = Math.abs(Number(useSpins) || 0);
 
-  // 1) дельтами
-  const deltaParams = { action:'update', id, addScore:inc, addSpins:-dec };
-  try{
-    const qs = new URLSearchParams({...deltaParams, t:Date.now()}).toString();
-    const r1 = await fetch(`${API}?${qs}`, {cache:'no-store'});
-    if (r1.ok){ try{ const j=await r1.json(); if (j?.ok || j?.result==='ok') return true; }catch{ return true; } }
-  }catch{}
+  const attempts = [
+    {kind:'GET',  params:{action:'update', id, addScore:inc, addSpins:-dec}},
+    {kind:'FORM', params:{action:'update', id, addScore:inc, addSpins:-dec}},
+  ];
 
-  try{
-    const body = new URLSearchParams(deltaParams).toString();
-    const r2 = await fetch(API, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body});
-    if (r2.ok) return true;
-  }catch{}
-
-  // 2) абсолютами (прочитать -> записать)
-  try{
+  try {
     const r = await fetch(`${API}?id=${encodeURIComponent(id)}&t=${Date.now()}`, {cache:'no-store'});
     const j = await r.json();
     if (j?.ok) {
       const d = j.data || {};
       const newScore = Number(d.score ?? d.Score ?? 0) + inc;
       const newSpins = Math.max(0, Number(d.spins ?? d.Spins ?? 0) - dec);
-
-      const setParams = { action:'set', id, score:newScore, spins:newSpins };
-      const body = new URLSearchParams(setParams).toString();
-      const rSet = await fetch(API, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body});
-      if (rSet.ok) return true;
+      attempts.push(
+        {kind:'FORM', params:{action:'set', id, score:newScore, spins:newSpins}},
+        {kind:'JSON', params:{action:'set', id, score:newScore, spins:newSpins}},
+      );
     }
-  }catch{}
+  } catch {}
 
+  for (const att of attempts) {
+    try {
+      if (att.kind === 'GET') {
+        const qs = new URLSearchParams({...att.params, t:Date.now()});
+        const r = await fetch(`${API}?${qs}`, {cache:'no-store'});
+        if (r.ok) return true;
+      } else if (att.kind === 'FORM') {
+        const body = new URLSearchParams(att.params).toString();
+        const r = await fetch(API, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body});
+        if (r.ok) return true;
+      } else {
+        const r = await fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(att.params)});
+        if (r.ok) return true;
+      }
+    } catch {}
+  }
   console.warn('API update failed');
   return false;
 }
@@ -83,6 +88,38 @@ const spinBtn = document.getElementById('spinBtn');
 const wheel   = document.getElementById('wheelBody');
 const uiSpins = document.getElementById('spinsLeft');
 const uiScore = document.getElementById('userScore');
+
+/* ===== POPUP refs ===== */
+const REF_LINK = 'https://t.me/Gastronomads_bot?start=ref_go';
+const noSpinsOverlay = document.getElementById('noSpinsOverlay');
+const refClose  = document.getElementById('refClose');
+const refCopy   = document.getElementById('refCopy');
+const refLinkEl = document.getElementById('refLink');
+const refToast  = document.getElementById('refToast');
+refLinkEl.value = REF_LINK;
+
+let popupShownThisSession = false;
+function showNoSpinsPopup(){
+  if (popupShownThisSession) return;
+  popupShownThisSession = true;
+  noSpinsOverlay.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function hideNoSpinsPopup(){
+  noSpinsOverlay.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+refClose?.addEventListener('click', hideNoSpinsPopup);
+noSpinsOverlay?.addEventListener('click', (e)=>{ if (e.target===noSpinsOverlay) hideNoSpinsPopup(); });
+refCopy?.addEventListener('click', async ()=>{
+  try{
+    await navigator.clipboard.writeText(REF_LINK);
+  }catch{
+    refLinkEl.select(); document.execCommand('copy');
+  }
+  refToast?.classList.add('on');
+  setTimeout(()=>refToast?.classList.remove('on'), 1200);
+});
 
 function renderUI(){
   uiSpins.textContent = state.spins;
@@ -119,7 +156,7 @@ function scheduleResetTimer(){
 }
 
 /* ===== Сессия колеса ===== */
-const SLICE_VALUES = [0,1,3,4,5,6,10,12]; // по часовой
+const SLICE_VALUES = [0,1,3,4,5,6,10,12];
 const N = SLICE_VALUES.length;
 const SLICE_ANGLE = 360 / N;
 const BASE_WEIGHTS = {0:.3,1:.6,3:1.0,4:1.2,5:1.4,6:1.2,10:.6,12:.4};
@@ -142,7 +179,7 @@ function chooseValue(){
   const left = 3 - session.spins;
   const cap  = 20 - session.total;
   let allowed = SLICE_VALUES.filter(v => v <= cap);
-  if (left === 1 && session.total === 0) allowed = allowed.filter(v => v > 0); // итог не 0
+  if (left === 1 && session.total === 0) allowed = allowed.filter(v => v > 0);
   if (!allowed.length) return 1;
   const w = allowed.map(v => BASE_WEIGHTS[v] ?? .1);
   const s = w.reduce((a,b)=>a+b,0)||1; let r = Math.random()*s;
@@ -189,39 +226,38 @@ function trySpin(){
   wheel.addEventListener('transitionend', async function onEnd(){
     wheel.removeEventListener('transitionend', onEnd);
 
-    // фиксация угла без обратного прокрута
     session.angle = norm(target);
     wheel.classList.add('no-anim');
     wheel.style.setProperty('--rot', session.angle+'deg');
     void wheel.offsetHeight;
     wheel.classList.remove('no-anim');
 
-    // лимиты
     session.spins += 1;
     session.total += value;
     if (session.spins >= 3 || session.total >= 20) session.done = true;
 
     daily.used += 1; saveDaily(); if (daily.used >= 3) scheduleResetTimer();
 
-    // локально
     state.score = Number(state.score||0) + Number(value||0);
     state.spins = Math.max(0, Number(state.spins||0) - 1);
 
     saveLocal(); persistSession(); renderUI();
 
-    // сервер
     try{
       await updateUserOnAPI({ addScore:value, useSpins:1 });
-      await fetchUserFromAPI(state.id); // подтянуть свежие Score/Spins
+      await fetchUserFromAPI(state.id); // подтянуть актуальные значения
       renderUI();
     }catch(e){ console.warn(e); }
+
+    // ПОКАЗАТЬ ПОПАП, если попыток больше нет
+    if (state.spins <= 0) showNoSpinsPopup();
 
     spinning = false;
     renderUI();
   }, {once:true});
 }
 
-/* ===== Нижнее меню ===== */
+/* ===== Навигация нижнего меню ===== */
 document.querySelectorAll('#bottomNav .tab').forEach(tab=>{
   tab.addEventListener('click', ()=>{
     const id = state.id || getClientId();
@@ -236,7 +272,7 @@ document.querySelectorAll('#bottomNav .tab').forEach(tab=>{
 (async () => {
   const id = getClientId();
   loadLocal(id);
-  await fetchUserFromAPI(id);    // подтянуть score и доступные Spins
+  await fetchUserFromAPI(id);
   loadSession();
   loadDaily();
   renderUI();
